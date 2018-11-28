@@ -1,7 +1,5 @@
 import datetime
-
 import telegram
-
 import secret_settings
 import settings
 import logging
@@ -46,36 +44,38 @@ def respond(bot, update):
     if text =='SEND A GIFT':
         choosing_gift(bot, update)
         return
-    if text =='SEND A MESSAGE':
+    elif text =='SEND A MESSAGE':
         bot.send_message(chat_id=chat_id, text="Working In Progress")
         return
-    if text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
+    elif text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
         kind_present = text
         price_range(bot, update)
         return
     client_t = Client(settings.HOST, settings.DB)
-    bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
-    if status["add_event"]:
+    elif status["add_event"]:
         add_event(bot, update)
 
 
-    if status["delete_friend"]:
+    elif status["delete_friend"]:
         print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
 
-    if status['delete_event']:
+    elif status['delete_event']:
         delete_event(bot, update)
 
 
-    if status["add_member"] == 1:
+    elif status["add_member"] == 1:
         name = update.message.text
         client_t.create_new_member(chat_id, name)
         status["add_member"] = 0
 
-    if status["add_friend"]:
+    elif status["add_friend"]:
         add_friend(bot, update)
+
+    else:
+        bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
@@ -83,7 +83,6 @@ def send_gift(bot, update):
     custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="what is your choice?", reply_markup=reply_markup)
-
 
 def choosing_gift(bot, update):
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
@@ -99,7 +98,6 @@ def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def add_event(bot, update):
     global some_event
@@ -155,12 +153,14 @@ def add_event(bot, update):
         status["add_event"] -= 1
 
 def delete_event(bot, update):
+
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Enter friend Name ??"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status['delete_event'] = 2
+
     elif status['delete_event'] == 2:
         status['delete_event'] -= 1
         e = Event(settings.HOST, settings.DB)
@@ -178,7 +178,6 @@ def delete_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         ########not complete
 
-
 def show_upcoming_events(bot, update):
     message = "Upcoming Events "
     e = Event(settings.HOST, settings.TEST_DB)
@@ -192,14 +191,13 @@ def show_upcoming_events(bot, update):
             upcoming_events.append(event)
     message += "\n".join(upcoming_events)
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
+    ###not completed
 
 def show_friends(bot, update):
     c_model = Client(settings.HOST, settings.DB)
     friends = c_model.get_friends(update.message.chat_id)
     message = "\n".join(friends)
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def delete_friend(bot, update):
     c_model = Client(settings.HOST, settings.DB)
@@ -211,7 +209,6 @@ def delete_friend(bot, update):
         print(update.message.text)
         message = "YES"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def add_friend(bot, update):
     global some_friend
