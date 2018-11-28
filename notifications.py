@@ -4,25 +4,35 @@ import settings
 from event_model import Event
 import datetime
 
-now = datetime.datetime.now()
+today = datetime.datetime.now()
 import requests
 
 
 def check_event_dates():
     e = Event(settings.HOST, settings.TEST_DB)
-
-    today = now
     events = e.get_all_events()
+    for event in events:
 
-    for event in events:
-        print(f"evens   {event['date']}")
-        tmp_date=datetime.datetime(today.year,event['date'].month,event['date'].day)
-        print(f"{tmp_date}")
-        print(tmp_date.day-today.day)
-    for event in events:
-        if today-event['date'].day in [7, 2, 1, 0]:
-            bot_message = f"friendly reminder its {event['full name']} {event['type']} in {today-event['date']} days"
+        # day1 = datetime.datetime.now()
+        # day2 = ('2016-10-28 10:32:45')
+        #
+        # day2 = datetime.datetime(*time.strptime(day2, "%Y-%m-%d %H:%M:%S")[:6])
+        # print(abs(day2 - day1).seconds)
+
+        d0 = today
+        d1 = datetime.datetime(today.year, event['date'].month, event['date'].day)
+
+        delta = d1 - d0
+
+        if str(delta.days) in "721":
+            bot_message = f"friendly reminder its {event['name']} {event['type']} in {delta.days}" + (f"days" if delta.days > 1 else "day")
             bot_send_notifications(bot_message)
+
+        elif delta.days == 0:
+            bot_message = f"friendly reminder its {event['name']} {event['type']}" +(" is TOMORROW" if delta.seconds/3600 > 0 else "TODAY")
+            bot_send_notifications(bot_message)
+            print(delta.seconds/3600)
+
 
 def bot_send_notifications(bot_message):
     print(f"bot message =---{bot_message}")
