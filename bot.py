@@ -9,12 +9,10 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
-<<<<<<< HEAD
-=======
 status = {"add_friend":  0, "add_event": 0, "send_gift": 0}
 
 some_event = []
->>>>>>> 1cab8d06316c9ae317753d8939486fd9e98aefaa
+
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
     level=logging.INFO)
