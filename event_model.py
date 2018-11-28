@@ -21,7 +21,11 @@ class Event:
         return list
 
     def get_events_by_name(self, name):
-        return self.events.find_one({"name": name})
+        myCursor = self.events.find({"name": name})
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
 
     def count_events(self):
         return self.events.count_documents({})
