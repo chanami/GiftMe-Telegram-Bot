@@ -8,6 +8,5 @@ def test_add_client():
     new_client.add_friend_to_list(chat_id,  {"full_name": 'roy mak', "address": 'jerusalem'})
     new_client.add_friend_to_list(chat_id,  {"full_name": 'boris', "address": 'Tal Aviv'})
     new_client.add_friend_to_list(chat_id,  {"full_name": 'miki', "address": 'jerusalem'})
-
-    # assert storage.count_items(chat_id) == 3
-    # assert storage.get_items(chat_id) == ["milk", "cookies", "peanuts", ]
+    new_client.get_friend(chat_id)
+    new_client.delete_friend(chat_id, {"full_name": 'boris', "address": 'Tal Aviv'})
