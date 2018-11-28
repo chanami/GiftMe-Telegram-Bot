@@ -78,11 +78,8 @@ def send_gift(bot, update):
 
 
 def choosing_gift(bot, update):
-<<<<<<< HEAD
-    custom_keyboard = [['flowers', 'Balloons', 'Chocolates', '??']]
-=======
+
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
->>>>>>> df3eb8953ec87ecba7c51b605cdfa9293f71a889
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="choosing", reply_markup=reply_markup)
 
