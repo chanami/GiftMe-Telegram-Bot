@@ -115,9 +115,11 @@ def show_upcoming_events(bot, update):
 
 
 def show_friends(bot, update):
+    message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
     friends = c_model.get_friends(update.message.chat_id)
-    message = "\n".join(friends)
+    for f in friends:
+        message += f"Name: {f['full_name ']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
@@ -160,8 +162,8 @@ dispatcher.add_handler(help_handler)
 add_event_handler = CommandHandler('add_event', add_event)
 dispatcher.add_handler(add_event_handler)
 
-show_upcoming_events_handler = CommandHandler('show_upcomung_events', show_upcoming_events)
-dispatcher.add_handler(show_upcoming_events_handler)
+show_friends_handler = CommandHandler('show_friends', show_friends)
+dispatcher.add_handler(show_friends_handler)
 
 add_friend_handler = CommandHandler('add_friend', add_friend)
 dispatcher.add_handler(add_friend_handler)
