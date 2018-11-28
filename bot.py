@@ -27,7 +27,6 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 
-
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
@@ -38,9 +37,11 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
+
 kind_present = ""
 
 
+<<<<<<< HEAD
 def get_elements(kind_present, text):
     gift = giftList.get_gifts_by_type(kind_present)
     ran = giftList.get_gifts_by_price(text)
@@ -51,6 +52,8 @@ def get_elements(kind_present, text):
 
 
 
+=======
+>>>>>>> 512d147ccd8ec59bed74fa501f229b532788d7d0
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -68,7 +71,6 @@ def respond(bot, update):
     elif text in ['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']:
         get_elements(kind_present, text)
 
-
     elif status["add_event"]:
         add_event(bot, update)
 
@@ -79,7 +81,6 @@ def respond(bot, update):
 
     elif status['delete_event']:
         delete_event(bot, update)
-
 
     elif status["add_member"] == 1:
         name = update.message.text
@@ -95,25 +96,56 @@ def respond(bot, update):
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
+
 def send_gift(bot, update):
     callback_button = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(callback_button)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 512d147ccd8ec59bed74fa501f229b532788d7d0
 def choosing_gift(bot, update):
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="choose kind of present", reply_markup=reply_markup)
+
 
 def price_range(bot, update):
     custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="what range of price", reply_markup=reply_markup)
 
+
 def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def send_notification(bot,update):
+    e = Event(settings.HOST, settings.DB)
+    events = e.get_all_events()
+    for event in events:
+        d0 = datetime.datetime.now()
+        d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
+        delta = d1 - d0
+        if str(delta.days) in "7321":
+            bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
+                f"days" if delta.days > 1 else "day")
+
+        elif delta.days == 0:
+            bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
+                " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
+        else:
+            continue
+        bot.send_message(chat_id=update.message.chat_id, text=bot_message)
+        bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+        bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
+
 
 def add_event(bot, update):
     global some_event
@@ -126,7 +158,6 @@ def add_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
         some_event.append(update.message.chat_id)
-
 
     elif status["add_event"] == 3:
         name = update.message.text
@@ -153,7 +184,6 @@ def add_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
 
-
     elif status["add_event"] == 1:
         date = update.message.text
         date = date.split('/')
@@ -167,7 +197,7 @@ def add_event(bot, update):
         some_event = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
-        notifications.check_event_dates()
+        send_notification(bot,update)
 
 def delete_event(bot, update):
     if status['delete_event'] == 0:
