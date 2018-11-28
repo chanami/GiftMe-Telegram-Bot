@@ -10,8 +10,8 @@ class Event:
     def add_event(self, client_id, full_name, date, type, mark, phone):
         self.events.insert_one({"client_id": client_id, "name":full_name, "date":date, "type":type, "mark":mark,"phone":phone})
 
-    def delete_event(self, type, date):
-        self.events.delete_one({"date":date, "type":type})
+    def delete_event(self, name, type, date):
+        self.events.delete_one({"name":name, "type":type, "date":date})
 
     def get_events_by_date(self, date):
         myCursor =  self.events.find({"date": date})
