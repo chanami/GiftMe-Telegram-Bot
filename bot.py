@@ -40,9 +40,12 @@ def start(bot, update):
 
 
 def respond(bot, update):
-    client_t = Client(settings.HOST, settings.DB)
-    chat_id = update.message.chat_id
     text = update.message.text
+    chat_id = update.message.chat_id
+    if text =='SEND A GIFT':
+        choosing_gift(bot, update)
+        return
+    client_t = Client(settings.HOST, settings.DB)
     bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
     if status["add_event"]:
@@ -72,10 +75,9 @@ def send_gift(bot, update):
     custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
-    if reply_markup == custom_keyboard[0]:
-        Choosing_gift(bot, update)
 
-def Choosing_gift(bot, update):
+
+def choosing_gift(bot, update):
     custom_keyboard = [['flowers', 'Balloons', 'Chocolates', '??']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
