@@ -10,4 +10,3 @@ def test_add_client():
     new_client.add_friend_to_list(chat_id,  {"full_name": 'miki', "address": 'jerusalem'})
     new_client.get_friend(chat_id)
     new_client.delete_friend(chat_id, {"full_name": 'boris', "address": 'Tal Aviv'})
-test_add_client()
