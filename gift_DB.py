@@ -10,7 +10,7 @@ class giftList():
         self.gifts.replace_one({"link":link},{"type": type, "price":price, "link":link},upsert=True)
 
     def get_gifts_by_type(self, type):
-        myCursor =  self.gifts.find({"type": type})
+        myCursor = self.gifts.find({"type": type})
         list = []
         for x in myCursor:
             list.append(x)

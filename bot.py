@@ -82,9 +82,11 @@ def respond(bot, update):
 
 
 def send_gift(bot, update):
-    custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="what is your choice?", reply_markup=reply_markup)
+    callback_button = [['SEND A GIFT', 'SEND A MESSAGE']]
+    reply_markup = telegram.ReplyKeyboardMarkup(callback_button)
+    bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
+
+
 
 
 def choosing_gift(bot, update):
