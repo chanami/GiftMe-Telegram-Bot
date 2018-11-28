@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 telegram = "*"
 python-telegram-bot = "*"
+pymongo = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"
