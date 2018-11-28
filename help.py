@@ -6,6 +6,7 @@ class Help():
 /delete_friend:  delete a friend\n
 /show_friends:  show all friends of the member\n
 /delete_event:  delete an event\n
-/show_upcoming_events:  show upcoming events of this week'''
+/show_upcoming_events:  show upcoming events of this week\n
+/send_gift: Opening a gift selection'''
     def get_explanation(self):
         return self.com
