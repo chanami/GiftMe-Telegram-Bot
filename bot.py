@@ -1,5 +1,7 @@
 import datetime
 import telegram
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 import secret_settings
 import settings
 import logging
@@ -7,7 +9,7 @@ import notifications
 from event_model import Event
 from help import Help
 from client import Client
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
@@ -25,7 +27,23 @@ logger = logging.getLogger(__name__)
 updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
+kind_present = ""
+####
+def button(bot, update):
+    query = update.callback_query
+    chat_id = query.message.chat_id
+    if query.data == 'SEND A GIFT':
+        print("stam")
+        logger.info(f"= Got on chat #{chat_id}: pressed send a gift button")
+        choosing_gift(bot, update)
+    elif query.data == 'SEND A MESSAGE':
+        logger.info(f"= Got on chat #{chat_id}: pressed send a message button")
+        pass
+    elif query.data == 'Flowers':
+        logger.info(f"= Got on chat #{chat_id}: pressed Flowers button")
+        price_range(bot, update)
 
+####
 
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
@@ -37,7 +55,6 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
-kind_present = ""
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -81,14 +98,22 @@ def respond(bot, update):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 def send_gift(bot, update):
-    custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="what is your choice?", reply_markup=reply_markup)
+    keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
+                 InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    bot.send_message(chat_id=update.message.chat_id, text="what is your choice?",
+                     reply_markup=reply_markup)
 
 def choosing_gift(bot, update):
-    custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="choose kind of present", reply_markup=reply_markup)
+    query = update.callback_query
+    chat_id = query.message.chat_id
+    #[['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
+    keyboard = [[InlineKeyboardButton("Flowers", callback_data='Flowers'),
+                 InlineKeyboardButton("Balloons", callback_data='Balloons'),
+                 InlineKeyboardButton("Chocolates", callback_data='Chocolates'),
+                 InlineKeyboardButton("Surprise Gift", callback_data='Surprise_Gift')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
 def price_range(bot, update):
     custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
@@ -276,3 +301,5 @@ dispatcher.add_handler(echo_handler)
 
 logger.info("Start polling")
 updater.start_polling()
+
+updater.dispatcher.add_handler(CallbackQueryHandler(button))
