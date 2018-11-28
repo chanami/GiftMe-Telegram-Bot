@@ -112,11 +112,12 @@ def add_friend(bot, update):
 
     global some_friend
     if status["add_friend"] == 0:
-        status["add_friend"] = 2
-        message = "adding event to a friend :)"
+        status["add_friend"] = 3
+        message = "adding friend :)"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Please enter your friend's name: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
+        status["add_friend"] -= 1
 
     elif status["add_friend"] == 2:
         name = update.message.text
@@ -131,12 +132,12 @@ def add_friend(bot, update):
         some_friend.append(False)
 
         c = Client(settings.HOST, settings.DB)
-        friend = {"full_name ":some_friend[0],"address":some_friend[1]}
+        friend = {"full_name ": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
         message = f"YAY you added an friend"
         some_friend = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
-
+        status["add_friend"] -= 1
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
