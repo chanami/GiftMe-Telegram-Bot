@@ -2,6 +2,7 @@ import secret_settings
 import settings
 import logging
 import client
+
 from help import Help
 from client import Client
 
@@ -9,7 +10,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
-status = {"add_friend":  0, "add_event": 0, "send_gift": 0}
+status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0}
 
 some_event = []
 logging.basicConfig(
@@ -22,12 +23,14 @@ dispatcher = updater.dispatcher
 
 
 def start(bot, update):
+    client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
 
     bot.send_message(chat_id=chat_id, text="HI!!! Enter Your Full Name -- ")
     full_name = update.message.text
-    client.Client.create_new_member(chat_id,full_name)
+    status["add_member"] = 1
+    client_t.create_new_member(chat_id, full_name)
 
 
 
@@ -35,12 +38,25 @@ def respond(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
+
+    if status["add_member"] == 1:
+        name = update.message.text
+        client_t.create_new_member(chat_id, name)
+        print(name)
+        status["add_member"] = 0
+
+        print("I")
+    if status["add_friend"] == 1:
+        friend_name = update.message.text
+        print(friend_name)
+
+        if status["add_friend"] == 2:
+            address = update.message.text
+        new_friend = {'full_name': friend_name, "address": address}
+        client_t.add_friend_to_list(chat_id, new_friend)
+        status["add_friend"] == 0
+
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
-
-    # full_name = update.message.text
-    client_t.create_new_member(chat_id, text)
-
-    # bot.send_message(chat_id=update.message.chat_id, text=response)
 
 def help(bot, update):
     help_o = Help()
@@ -48,7 +64,7 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-def add_event(bot,update):
+def add_event(bot, update):
     message = "adding event to a friend :)"
     bot.send_message(chat_id=update.message.chat_id, text=message)
     status["add_event"] = 1
@@ -57,11 +73,13 @@ def add_event(bot,update):
     
 
 def add_friend(bot, update):
+    message = "adding an friend! Please enter your friend name:"
     status["add_friend"] = 1
-    client_t = Client(settings.HOST, settings.DB)
-    chat_id = update.message.chat_id
-    text = update.message.text
-    client_t.add_friend_to_list(chat_id, text)
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+    print("FK")
+    status["add_friend"] = 2
+    message = "Please enter your friend address:"
+    bot.send_message(chat_id = update.message.chat_id, text=message)
 
 
 start_handler = CommandHandler('start', start)
