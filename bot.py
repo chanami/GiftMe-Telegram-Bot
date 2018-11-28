@@ -4,11 +4,7 @@ import secret_settings
 import settings
 import logging
 import client
-<<<<<<< HEAD
 from event_model import Event
-=======
-
->>>>>>> 2924a6fe4a1700e6922bb2a440e8937f08040937
 from help import Help
 from client import Client
 
@@ -16,12 +12,8 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
-<<<<<<< HEAD
-status = {"add_friend":  0, "add_event": 0, "send_gift": 0}
-=======
-status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0}
 
->>>>>>> 2924a6fe4a1700e6922bb2a440e8937f08040937
+status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0}
 some_event = []
 
 logging.basicConfig(
@@ -49,14 +41,8 @@ def respond(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
-<<<<<<< HEAD
-    logger.info(f"= Got on chat #{chat_id}: {text!r}")
-    if status["add_event"]:
+    if status["add_member"]:
         add_event(bot, update)
-    client_t.create_new_member(chat_id, text)
-
-=======
-
     if status["add_member"] == 1:
         name = update.message.text
         client_t.create_new_member(chat_id, name)
@@ -75,7 +61,6 @@ def respond(bot, update):
         status["add_friend"] == 0
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
->>>>>>> 2924a6fe4a1700e6922bb2a440e8937f08040937
 
 def help(bot, update):
     help_o = Help()
@@ -83,7 +68,6 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-<<<<<<< HEAD
 def add_event(bot,update):
     global some_event
     if(status["add_event"] == 0):
@@ -120,14 +104,7 @@ def add_event(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
 
-=======
-def add_event(bot, update):
-    message = "adding event to a friend :)"
-    bot.send_message(chat_id=update.message.chat_id, text=message)
-    status["add_event"] = 1
-    message = "Please enter your friend name: "
-    bot.send_message(chat_id=update.message.chat_id, text=message)
->>>>>>> 2924a6fe4a1700e6922bb2a440e8937f08040937
+
 
 def show_upcoming_events(bot,update):
     event = Event(settings.HOST, settings.DB)
