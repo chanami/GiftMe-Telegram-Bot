@@ -1,7 +1,7 @@
 # {YOUR BOT NAME HERE}
 {ONE LINE BOT DESCRIPTION HERE} <https://t.me/{BOT_ID}>
 
-* {Participant 1 Name}
+* {Yael Yazdi}
 * {Participant 2 Name}
 * {Participant 3 Name}
 
