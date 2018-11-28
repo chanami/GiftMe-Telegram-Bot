@@ -1,13 +1,10 @@
 import datetime
-
 import secret_settings
 import settings
 import logging
-import client
 from event_model import Event
 from help import Help
 from client import Client
-
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
@@ -36,7 +33,6 @@ def start(bot, update):
     client_t.create_new_member(chat_id, full_name)
 
 
-
 def respond(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
@@ -58,7 +54,7 @@ def respond(bot, update):
             address = update.message.text
         new_friend = {'full_name': friend_name, "address": address}
         client_t.add_friend_to_list(chat_id, new_friend)
-        status["add_friend"] == 0
+        status["add_friend"] = 0
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
@@ -68,9 +64,9 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-def add_event(bot,update):
+def add_event(bot, update):
     global some_event
-    if(status["add_event"] == 0):
+    if status["add_event"] == 0:
         status["add_event"] = 4
         message = "adding event to a friend :)"
         bot.send_message(chat_id=update.message.chat_id, text=message)
@@ -78,19 +74,22 @@ def add_event(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
         some_event.append(update.message.chat_id)
-    elif(status["add_event"] == 3):
+
+    elif status["add_event"] == 3:
         name = update.message.text
         some_event.append(name)
         message = "Enter Event Type:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
-    elif (status["add_event"] == 2):
+
+    elif status["add_event"] == 2:
         type = update.message.text
         some_event.append(type)
         message = "Enter event Date <yyyy/mm/dd>: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
-    elif (status["add_event"] == 1):
+
+    elif status["add_event"] == 1:
         date = update.message.text
         date = date.split('/')
         date = [int(d) for d in date]
@@ -105,14 +104,20 @@ def add_event(bot,update):
         status["add_event"] -= 1
 
 
-
-def show_upcoming_events(bot,update):
+def show_upcoming_events(bot, update):
     event = Event(settings.HOST, settings.DB)
-    #event.get_upcoming_events(datetime.datetime.now(),...)
     message = "show_upcoming_events"
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
-    
+
+def show_friends(bot, update):
+    client = Client(settings.HOST, settings.DB)
+    friends = client.get_friends(update.message.chat_id)
+    message = "\n".join(friends)
+    for f in friends:
+        print(f)
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def add_friend(bot, update):
     message = "adding an friend! Please enter your friend name:"
@@ -135,6 +140,9 @@ dispatcher.add_handler(add_event_handler)
 
 show_upcoming_events_handler = CommandHandler('show_upcomung_events', show_upcoming_events)
 dispatcher.add_handler(show_upcoming_events_handler)
+
+show_friends_handler = CommandHandler('show_friends', show_friends)
+dispatcher.add_handler(show_friends_handler)
 
 add_friend_handler = CommandHandler('add_friend', add_friend)
 dispatcher.add_handler(add_friend_handler)
