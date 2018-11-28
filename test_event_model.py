@@ -10,13 +10,13 @@ def test_off():
 def test_bulid_list():
     tester = event_model.Event(settings.HOST, settings.TEST_DB)
     chat_id = 66613871638461
-    tester.add_event(chat_id, 'Sara Cohen',datetime.datetime(1996,11,29), 'Birthday', False,'0548524490' )
-    tester.add_event(chat_id, 'Tzippy Levi', datetime.datetime(1996,2,1), 'Birthday', False, '0527156889',)
-    tester.add_event(chat_id, 'Rachel Vagshal', datetime.datetime(1996,2,1), 'Anniversary', False, '0527156887')
+    tester.add_event(chat_id, 'Sara Cohen','Birthday', datetime.datetime(1996,11,29), False, )
+    tester.add_event(chat_id, 'Tzippy Levi', 'Birthday', datetime.datetime(1996,2,1), False,)
+    tester.add_event(chat_id, 'Rachel Vagshal', 'Anniversary', datetime.datetime(1996,2,1), False, )
     chat_id = 55555871638461
-    tester.add_event(chat_id, 'Sara Cohen', datetime.datetime(1997,1,1), 'Anniversary', False, '0500024490')
-    tester.add_event(chat_id, 'Malka Levi', datetime.datetime(1998,1,1), 'Anniversary', False, '0527159989', )
-    tester.add_event(chat_id, 'Shira Vagshal', datetime.datetime(1996,1,5), 'Birthday', False, '0527444887')
+    tester.add_event(chat_id, 'Sara Cohen', 'Anniversary', datetime.datetime(1997,1,1), False, )
+    tester.add_event(chat_id, 'Malka Levi', 'Anniversary', datetime.datetime(1998,1,1), False, )
+    tester.add_event(chat_id, 'Shira Vagshal', 'Birthday', datetime.datetime(1996,1,5), False, )
     assert tester.count_events() == 6
 
 def test_delete_event():

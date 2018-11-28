@@ -7,8 +7,8 @@ class Event:
         self.db = self.client.get_database(db)
         self.events = self.db.get_collection("events")
 
-    def add_event(self, client_id, full_name, date, type, mark, phone):
-        self.events.insert_one({"client_id": client_id, "name":full_name, "date":date, "type":type, "mark":mark,"phone":phone})
+    def add_event(self, client_id, full_name, type, date, mark):
+        self.events.insert_one({"client_id": client_id, "name":full_name, "type":type, "date":date, "mark":mark,})
 
     def delete_event(self, name, type, date):
         self.events.delete_one({"name":name, "type":type, "date":date})

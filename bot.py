@@ -1,7 +1,10 @@
+import datetime
+
 import secret_settings
 import settings
 import logging
 import client
+from event_model import Event
 from help import Help
 from client import Client
 
@@ -10,7 +13,6 @@ from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
 status = {"add_friend":  0, "add_event": 0, "send_gift": 0}
-
 some_event = []
 
 logging.basicConfig(
@@ -37,11 +39,10 @@ def respond(bot, update):
     chat_id = update.message.chat_id
     text = update.message.text
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
-
-    # full_name = update.message.text
+    if status["add_event"]:
+        add_event(bot, update)
     client_t.create_new_member(chat_id, text)
 
-    # bot.send_message(chat_id=update.message.chat_id, text=response)
 
 def help(bot, update):
     help_o = Help()
@@ -50,14 +51,48 @@ def help(bot, update):
 
 
 def add_event(bot,update):
-    message = "adding event to a friend :)"
-    bot.send_message(chat_id=update.message.chat_id, text=message)
-    status["add_event"] = 1
-    message = "Please enter your friend name: "
-    bot.send_message(chat_id=update.message.chat_id, text=message)
+    global some_event
+    if(status["add_event"] == 0):
+        status["add_event"] = 4
+        message = "adding event to a friend :)"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        message = "Please enter your friend's name: "
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        status["add_event"] -= 1
+        some_event.append(update.message.chat_id)
+    elif(status["add_event"] == 3):
+        name = update.message.text
+        some_event.append(name)
+        message = "Enter Event Type:"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        status["add_event"] -= 1
+    elif (status["add_event"] == 2):
+        type = update.message.text
+        some_event.append(type)
+        message = "Enter event Date <yyyy/mm/dd>: "
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        status["add_event"] -= 1
+    elif (status["add_event"] == 1):
+        date = update.message.text
+        date = date.split('/')
+        date = [int(d) for d in date]
+        date = datetime.datetime(*date)
+        some_event.append(date)
+        some_event.append(False)
+        e = Event(settings.HOST, settings.DB)
+        e.add_event(*some_event)
+        message = f"YAY you added an event to {some_event[1]}"
+        some_event = []
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        status["add_event"] -= 1
+
 
 def show_upcoming_events(bot,update):
-    pass
+    event = Event(settings.HOST, settings.DB)
+    #event.get_upcoming_events(datetime.datetime.now(),...)
+    message = "show_upcoming_events"
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+
     
 
 def add_friend(bot, update):
