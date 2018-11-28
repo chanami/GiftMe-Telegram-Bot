@@ -5,21 +5,21 @@ class Client:
     def __init__(self, host, db):
         self.client = MongoClient(host)
         self.db = self.client.get_database(db)
-        self.lists = self.db.get_collection("friends")
+        self.lists = self.db.get_collection("Clients")
 
-    def create_new_member(self, chat_id):
+    def create_new_member(self, chat_id, full_name):
+        self.lists.drop()
         self.lists.replace_one({"chat_id": chat_id}, {
             "chat_id": chat_id,
-            "full name": '',
+            "full name": full_name,
             "friends": [],
         }, upsert=True)
 
-    def add_friend_to_list(self, chat_id, full_name,  friend):
-        self.lists.update_one({"chat_id": chat_id}, {"full_name": full_name}, {"$push": {"friends": friend}})
+    def add_friend_to_list(self, chat_id, friend):
+        self.lists.update_one({"chat_id": chat_id}, {"$push":{ "friends": friend}})
 
-    def get_friends(self, chat_id):
-        return self.db.collection.find({"friends"})
+    # def get_friends(self, chat_id):
+    #      return self.db.collection.find({"friends"})
 
-    def get_items(self, chat_id):
-        doc = self.get_doc(chat_id)
-        return doc['items']
+    # def delete_friend(self, chat_id):
+        # self.
