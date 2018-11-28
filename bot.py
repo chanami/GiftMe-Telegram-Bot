@@ -72,13 +72,17 @@ def send_gift(bot, update):
     custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
-    if reply_markup == custom_keyboard[0]:
-        Choosing_gift(bot, update)
 
-def Choosing_gift(bot, update):
-    custom_keyboard = [['flowers', 'Balloons', 'Chocolates', '??']]
+
+def choosing_gift(bot, update):
+    custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
+    bot.send_message(chat_id=update.message.chat_id, text="choosing", reply_markup=reply_markup)
+
+def price_range(bot, update):
+    custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
+    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
+    bot.send_message(chat_id=update.message.chat_id, text="price", reply_markup=reply_markup)
 
 def help(bot, update):
     help_o = Help()
