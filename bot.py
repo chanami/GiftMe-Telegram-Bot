@@ -58,6 +58,7 @@ def respond(bot, update):
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
+
 def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
@@ -105,9 +106,20 @@ def add_event(bot, update):
 
 
 def show_upcoming_events(bot, update):
-    event = Event(settings.HOST, settings.DB)
-    message = "show_upcoming_events"
+    message = "Upcoming Events "
+    e = Event(settings.HOST, settings.TEST_DB)
+    events = e.get_all_events()
+    upcoming_events=[]
+    for event in events:
+        d0 = datetime.datetime.now()
+        d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
+        delta = d1 - d0
+        if delta.days < 10:
+            upcoming_events.append(event)
+    message += "\n".join(upcoming_events)
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
 
 
 def show_friends(bot, update):
