@@ -40,8 +40,6 @@ def start(bot, update):
 
 kind_present = ""
 
-
-<<<<<<< HEAD
 def get_elements(kind_present, text):
     gift = giftList.get_gifts_by_type(kind_present)
     ran = giftList.get_gifts_by_price(text)
@@ -52,8 +50,6 @@ def get_elements(kind_present, text):
 
 
 
-=======
->>>>>>> 512d147ccd8ec59bed74fa501f229b532788d7d0
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -75,7 +71,6 @@ def respond(bot, update):
         add_event(bot, update)
 
     elif status["delete_friend"]:
-        print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
 
@@ -102,12 +97,6 @@ def send_gift(bot, update):
     reply_markup = telegram.ReplyKeyboardMarkup(callback_button)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 512d147ccd8ec59bed74fa501f229b532788d7d0
 def choosing_gift(bot, update):
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
