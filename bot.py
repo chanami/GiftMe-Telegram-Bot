@@ -49,6 +49,8 @@ def respond(bot, update):
     if status["add_friend"]:
         add_friend(bot, update)
 
+
+
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 
@@ -126,6 +128,14 @@ def show_friends(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
+def delete_friend(bot, update):
+    c_model = Client(settings.HOST, settings.DB)
+    message = "Please enter the friend you wants to delete:"
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+    name = update.message.text
+    c_model.delete_friend(update.message.chat_id, name)
+
+
 def add_friend(bot, update):
     global some_friend
     if status["add_friend"] == 0:
@@ -161,6 +171,10 @@ dispatcher.add_handler(start_handler)
 
 help_handler = CommandHandler('help', help)
 dispatcher.add_handler(help_handler)
+
+delete_friend_handler = CommandHandler('delete_friend', delete_friend)
+dispatcher.add_handler(delete_friend_handler)
+
 
 add_event_handler = CommandHandler('add_event', add_event)
 dispatcher.add_handler(add_event_handler)
