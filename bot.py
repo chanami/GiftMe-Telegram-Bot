@@ -42,12 +42,21 @@ def help(bot, update):
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
+
+def add_friend(bot, update):
+    client_t = Client(settings.HOST, settings.DB)
+    chat_id = update.message.chat_id
+    text = update.message.text
+    client_t.add_friend_to_list(chat_id, text)
+
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
 help_handler = CommandHandler('help', help)
 dispatcher.add_handler(help_handler)
 
+add_friend_handler = CommandHandler('add_friend', add_friend)
+dispatcher.add_handler(add_friend_handler)
 
 echo_handler = MessageHandler(Filters.text, respond)
 dispatcher.add_handler(echo_handler)
