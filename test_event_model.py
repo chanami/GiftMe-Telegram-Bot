@@ -21,7 +21,7 @@ def test_bulid_list():
 
 def test_delete_event():
     tester = event_model.Event(settings.HOST, settings.TEST_DB)
-    tester.delete_event('Birthday',datetime.datetime(1996,1,5))
+    tester.delete_event('Shira Vagshal','Birthday',datetime.datetime(1996,1,5))
     assert tester.count_events() == 5
 
 def test_event_by_date():
