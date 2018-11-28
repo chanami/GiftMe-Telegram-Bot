@@ -19,7 +19,5 @@ def initial():
 
     g.add_gift('Surprise Gift', "90$", "https://image.freepik.com/free-vector/opened-surprise-gift-box_3446-340.jpg")
 
-
-
 initial()
 

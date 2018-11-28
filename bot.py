@@ -7,6 +7,7 @@ import notifications
 from event_model import Event
 from help import Help
 from client import Client
+from gift_DB import giftList
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
@@ -38,6 +39,18 @@ def start(bot, update):
     client_t.create_new_member(chat_id, full_name)
 
 kind_present = ""
+
+
+def get_elements(kind_present, text):
+    gift = giftList.get_gifts_by_type(kind_present)
+    ran = giftList.get_gifts_by_price(text)
+    gift_in_range = []
+    for x, y in zip(gift, ran):
+        if x == y:
+            gift_in_range.append(x)
+
+
+
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -52,6 +65,8 @@ def respond(bot, update):
         kind_present = text
         price_range(bot, update)
         return
+    elif text in ['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']:
+        get_elements(kind_present, text)
 
 
     elif status["add_event"]:
@@ -84,8 +99,6 @@ def send_gift(bot, update):
     callback_button = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(callback_button)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
-
-
 
 def choosing_gift(bot, update):
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
@@ -157,7 +170,6 @@ def add_event(bot, update):
         notifications.check_event_dates()
 
 def delete_event(bot, update):
-
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
