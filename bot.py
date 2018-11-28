@@ -125,7 +125,7 @@ def add_event(bot, update):
         c = Client(settings.HOST, settings.DB)
         flag = False
         for friend in c.get_friends(update.message.chat_id):
-            if friend['full_name '] == name:
+            if friend['full_name'] == name:
                 flag = True
         if flag:
             some_event.append(name)
@@ -159,6 +159,7 @@ def add_event(bot, update):
         some_event = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
+        notifications.check_event_dates()
 
 
 

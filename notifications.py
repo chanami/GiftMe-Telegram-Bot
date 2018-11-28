@@ -14,7 +14,8 @@ def check_event_dates():
         d0 = datetime.datetime.now()
         d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
         delta = d1 - d0
-        if str(delta.days) in "731":
+        print(f"{delta.days}")
+        if str(delta.days) in "7321":
             bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (f"days" if delta.days > 1 else "day")
 
         elif delta.days == 0:
