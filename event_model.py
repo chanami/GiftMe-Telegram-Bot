@@ -7,22 +7,39 @@ class Event:
         self.db = self.client.get_database(db)
         self.events = self.db.get_collection("events")
 
-    def create_new_list(self, chat_id):
-        self.events.replace_one({"chat_id": chat_id}, {
-            "chat_id": chat_id,
-            "items": [],
-        }, upsert=True)
+    def add_event(self, client_id, full_name, date, type, mark, phone):
+        self.events.insert_one({"client_id": client_id, "name":full_name, "date":date, "type":type, "mark":mark,"phone":phone})
 
-    def add_item_to_list(self, chat_id, item):
-        self.events.update_one({"chat_id": chat_id}, {"$push": {"items": item}})
+    def delete_event(self, type, date):
+        self.events.delete_one({"date":date, "type":type})
 
-    def get_doc(self, chat_id):
-        return self.events.find_one({"chat_id": chat_id})
+    def get_events_by_date(self, date):
+        myCursor =  self.events.find({"date": date})
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
 
-    def count_items(self, chat_id):
-        doc = self.get_doc(chat_id)
-        return len(doc['items'])
+    def get_events_by_name(self, name):
+        myCursor = self.events.find({"name": name})
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
 
-    def get_items(self, chat_id):
-        doc = self.get_doc(chat_id)
-        return doc['items']
+    def count_events(self):
+        return self.events.count_documents({})
+
+    def get_all_events(self):
+        myCursor = self.events.find({})
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
+
+    def get_upcoming_events(self, start, end):
+        myCursor = self.events.find({"date": {"$gt": start, "$lt": end } })
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
