@@ -19,7 +19,6 @@ class Client:
         self.lists.update_one({"chat_id": chat_id}, {"$push":{ "friends": friend}})
 
     def get_friend(self, chat_id):
-        print(self.lists.find_one({"chat_id": chat_id}))
         return self.lists.find_one({"chat_id": chat_id})
 
     def delete_friend(self, chat_id, friend):
