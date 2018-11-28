@@ -20,7 +20,7 @@ class Client:
     def get_doc(self, chat_id):
         return self.lists.find_one({"chat_id": chat_id})
 
-    def get_friend(self, chat_id):
+    def get_friends(self, chat_id):
         doc = self.get_doc(chat_id)
         return doc['friends']
 
