@@ -9,12 +9,9 @@ import notifications
 from event_model import Event
 from help import Help
 from client import Client
-<<<<<<< HEAD
 from telegram.ext import CommandHandler, CallbackQueryHandler
-=======
 from gift_DB import giftList
 from telegram.ext import CommandHandler
->>>>>>> 825ace6f6f6f8e77dd3d3d888bf31efb2e661685
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
@@ -48,11 +45,8 @@ def button(bot, update):
         logger.info(f"= Got on chat #{chat_id}: pressed Flowers button")
         price_range(bot, update)
 
-<<<<<<< HEAD
 ####
 
-=======
->>>>>>> 825ace6f6f6f8e77dd3d3d888bf31efb2e661685
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
@@ -63,13 +57,7 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
-<<<<<<< HEAD
-=======
 
-kind_present = ""
-
-
-<<<<<<< HEAD
 def get_elements(kind_present, text):
     gift = giftList.get_gifts_by_type(kind_present)
     ran = giftList.get_gifts_by_price(text)
@@ -80,9 +68,6 @@ def get_elements(kind_present, text):
 
 
 
-=======
->>>>>>> 512d147ccd8ec59bed74fa501f229b532788d7d0
->>>>>>> 825ace6f6f6f8e77dd3d3d888bf31efb2e661685
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -127,24 +112,15 @@ def respond(bot, update):
 
 
 def send_gift(bot, update):
-<<<<<<< HEAD
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="what is your choice?",
                      reply_markup=reply_markup)
-=======
-    callback_button = [['SEND A GIFT', 'SEND A MESSAGE']]
-    reply_markup = telegram.ReplyKeyboardMarkup(callback_button)
-    bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
-
-<<<<<<< HEAD
-=======
->>>>>>> 825ace6f6f6f8e77dd3d3d888bf31efb2e661685
 
 
 
->>>>>>> 512d147ccd8ec59bed74fa501f229b532788d7d0
+
 def choosing_gift(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
