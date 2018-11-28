@@ -13,6 +13,7 @@ from telegram.ext import Updater
 status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0}
 
 some_event = []
+
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
     level=logging.INFO)
@@ -70,6 +71,9 @@ def add_event(bot, update):
     status["add_event"] = 1
     message = "Please enter your friend name: "
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+def show_upcoming_events(bot,update):
+    pass
     
 
 def add_friend(bot, update):
@@ -88,10 +92,11 @@ dispatcher.add_handler(start_handler)
 help_handler = CommandHandler('help', help)
 dispatcher.add_handler(help_handler)
 
-
 add_event_handler = CommandHandler('add_event', add_event)
 dispatcher.add_handler(add_event_handler)
 
+show_upcoming_events_handler = CommandHandler('show_upcomung_events', show_upcoming_events)
+dispatcher.add_handler(show_upcoming_events_handler)
 
 add_friend_handler = CommandHandler('add_friend', add_friend)
 dispatcher.add_handler(add_friend_handler)
