@@ -2,7 +2,7 @@ import secret_settings
 import settings
 import logging
 import client
-
+from help import Help
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
@@ -31,16 +31,18 @@ def respond(bot, update):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
     response = "some..."
-
-    if(text == "help"):
-        response = help_function()
     bot.send_message(chat_id=update.message.chat_id, text=response)
 
-def help_function():
-    return help.Help.get_explanation()
+def help(bot,update):
+    help_o = Help()
+    message = help_o.get_explanation()
+    bot.send_message(chat_id=update.message.chat_id, text=message)
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
+
+help_handler = CommandHandler('help', help)
+dispatcher.add_handler(help_handler)
 
 
 echo_handler = MessageHandler(Filters.text, respond)
