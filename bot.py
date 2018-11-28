@@ -41,7 +41,7 @@ def respond(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
-    if status["add_member"]:
+    if status["add_event"]:
         add_event(bot, update)
     if status["add_member"] == 1:
         name = update.message.text
