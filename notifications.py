@@ -19,11 +19,13 @@ def check_event_dates():
             bot_message = f"Friendly Reminder its {event['name']} {event['type']}" +(" is TOMORROW" if delta.seconds/3600 > 0 else "TODAY")
         else:
             continue
-        bot_send_notifications(bot_message)
+        bot_send_notifications(bot_message,event['client_id'])
 
 
-def bot_send_notifications(bot_message):
+def bot_send_notifications(bot_message,chat_id):
     bot_token = secret_settings.BOT_TOKEN
+
+    # bot_chatID = chat_id
     bot_chatID = '757815786'
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
     requests.get(send_text)
