@@ -13,7 +13,8 @@ from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
 
-status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_friend":  0}
+status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0,"delete_friend":  0}
+
 some_event = []
 
 some_friend = []
@@ -31,25 +32,31 @@ def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
-    bot.send_message(chat_id=chat_id, text="HI!!! Enter Your Full Name -- ")
+    bot.send_message(chat_id=chat_id, text="HI!!!")
+    bot.send_message(chat_id=chat_id, text="Enter Your Full Name -- ")
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
-    bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
 
 def respond(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
+    bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
     if status["add_event"]:
         add_event(bot, update)
+
 
     if status["delete_friend"]:
         print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
+
+    if status['delete_event']:
+        delete_event(bot, update)
+
 
     if status["add_member"] == 1:
         name = update.message.text
@@ -126,7 +133,28 @@ def add_event(bot, update):
         status["add_event"] -= 1
 
 def delete_event(bot, update):
-    pass
+    if status['delete_event'] == 0:
+        message = "OH NO you are deleting an event :("
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        message = "Enter friend Name ??"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        status['delete_event'] = 2
+    elif status['delete_event'] == 2:
+        status['delete_event'] -= 1
+        e = Event(settings.HOST, settings.DB)
+        ev = e.get_events_by_name(update.message.text)
+        if len(ev) == 0:
+            message = "you don't have such friend"
+            bot.send_message(chat_id=update.message.chat_id, text=message)
+            return
+        message = ""
+        for event in ev:
+            print(event["type"])
+            print(event["date"])
+            message += "=> {} on {}\n".format(event["type"], event["date"])
+        message += "enter type event:"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        ########not complete
 
 
 def show_upcoming_events(bot, update):
