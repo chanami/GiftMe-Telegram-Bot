@@ -29,9 +29,15 @@ def respond(bot, update):
     chat_id = update.message.chat_id
     text = update.message.text
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
+
     response = "some..."
+
+    if(text == "help"):
+        response = help_function()
     bot.send_message(chat_id=update.message.chat_id, text=response)
 
+def help_function():
+    return help.Help.get_explanation()
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)

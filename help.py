@@ -7,5 +7,5 @@ class Help():
                '/show_friends': ' show all friends of the member',
                '/delete_event': 'delete an event',
                '/show_upcoming_events': ' show upcoming events of this week'}
-    def get_explanation(self, command):
-        return self.com[command]
+    def get_explanation(self):
+        return self.com
