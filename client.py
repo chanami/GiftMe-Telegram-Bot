@@ -8,7 +8,6 @@ class Client:
         self.lists = self.db.get_collection("Clients")
 
     def create_new_member(self, chat_id, full_name):
-        self.lists.drop()
         self.lists.replace_one({"chat_id": chat_id}, {
             "chat_id": chat_id,
             "full name": full_name,

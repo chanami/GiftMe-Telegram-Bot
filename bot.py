@@ -3,6 +3,8 @@ import settings
 import logging
 import client
 from help import Help
+from client import Client
+
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
@@ -21,19 +23,21 @@ def start(bot, update):
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
 
-    bot.send_message(chat_id=chat_id, text="HI!!! Enter Your Full Name -- ")
-    full_name = update.message.text
-    client.Client.create_new_member(chat_id,full_name)
+    bot.send_message(chat_id=chat_id, text=" HI!!! Enter Your Full Name -- ")
+
 
 def respond(bot, update):
+    client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
-    response = "some..."
-    bot.send_message(chat_id=update.message.chat_id, text=response)
+    # full_name = update.message.text
+    client_t.create_new_member(chat_id, text)
 
-def help(bot,update):
+    # bot.send_message(chat_id=update.message.chat_id, text=response)
+
+def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
