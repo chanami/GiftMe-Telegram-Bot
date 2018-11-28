@@ -38,12 +38,20 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
-
+kind_present = ""
 def respond(bot, update):
+    global kind_present
     text = update.message.text
     chat_id = update.message.chat_id
     if text =='SEND A GIFT':
         choosing_gift(bot, update)
+        return
+    if text =='SEND A MESSAGE':
+        bot.send_message(chat_id=chat_id, text="Working In Progress")
+        return
+    if text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
+        kind_present = text
+        price_range(bot, update)
         return
     client_t = Client(settings.HOST, settings.DB)
     bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
@@ -74,19 +82,18 @@ def respond(bot, update):
 def send_gift(bot, update):
     custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
+    bot.send_message(chat_id=update.message.chat_id, text="what is your choice?", reply_markup=reply_markup)
 
 
 def choosing_gift(bot, update):
-
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="choosing", reply_markup=reply_markup)
+    bot.send_message(chat_id=update.message.chat_id, text="choose kind of present", reply_markup=reply_markup)
 
 def price_range(bot, update):
     custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="price", reply_markup=reply_markup)
+    bot.send_message(chat_id=update.message.chat_id, text="what range of price", reply_markup=reply_markup)
 
 def help(bot, update):
     help_o = Help()
