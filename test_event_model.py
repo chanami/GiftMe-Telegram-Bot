@@ -10,7 +10,7 @@ def test_off():
 def test_bulid_list():
     tester = event_model.Event(settings.HOST, settings.TEST_DB)
     chat_id = 66613871638461
-    tester.add_event(chat_id, 'Sara Cohen',datetime.datetime(1996,1,1), 'Birthday', False,'0548524490' )
+    tester.add_event(chat_id, 'Sara Cohen',datetime.datetime(1996,11,29), 'Birthday', False,'0548524490' )
     tester.add_event(chat_id, 'Tzippy Levi', datetime.datetime(1996,2,1), 'Birthday', False, '0527156889',)
     tester.add_event(chat_id, 'Rachel Vagshal', datetime.datetime(1996,2,1), 'Anniversary', False, '0527156887')
     chat_id = 55555871638461
@@ -44,5 +44,5 @@ def test_upcoming_events():
     tester = event_model.Event(settings.HOST, settings.TEST_DB)
     assert len(tester.get_upcoming_events(datetime.datetime(1990,1,5),datetime.datetime(1990,1,6))) == 0
     assert len(tester.get_upcoming_events(datetime.datetime(1990,1,5),datetime.datetime(1999,1,6))) == 5
-    assert len(tester.get_upcoming_events(datetime.datetime(1996,3,5),datetime.datetime(1999,1,6))) == 2
+    assert len(tester.get_upcoming_events(datetime.datetime(1996,3,5),datetime.datetime(1999,1,6))) == 3
 
