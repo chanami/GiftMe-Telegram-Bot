@@ -15,7 +15,7 @@ class Client:
         }, upsert=True)
 
     def add_friend_to_list(self, chat_id, friend):
-        self.lists.update_one({"chat_id": chat_id}, {"$push":{ "friends": friend}})
+        self.lists.update_one({"chat_id": chat_id}, {"$push": {"friends": friend}})
 
     def get_doc(self, chat_id):
         return self.lists.find_one({"chat_id": chat_id})
@@ -25,4 +25,4 @@ class Client:
         return doc['friends']
 
     def delete_friend(self, chat_id, friend):
-        self.lists.update({"chat_id": chat_id}, {"$pull": {'friends': friend}})
+        self.lists.delete_one({"chat_id": chat_id, 'friends': friend})
