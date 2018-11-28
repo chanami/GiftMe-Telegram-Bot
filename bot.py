@@ -1,6 +1,7 @@
 import secret_settings
 import settings
 import logging
+import client
 
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
@@ -12,7 +13,6 @@ logging.basicConfig(
     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
 updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
@@ -20,8 +20,10 @@ dispatcher = updater.dispatcher
 def start(bot, update):
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
-    bot.send_message(chat_id=chat_id, text="welcome...")
 
+    bot.send_message(chat_id=chat_id, text="HI!!! Enter Your Full Name -- ")
+    full_name = update.message.text
+    client.Client.create_new_member(chat_id,full_name)
 
 def respond(bot, update):
     chat_id = update.message.chat_id
@@ -33,6 +35,7 @@ def respond(bot, update):
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
+
 
 echo_handler = MessageHandler(Filters.text, respond)
 dispatcher.add_handler(echo_handler)
