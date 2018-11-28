@@ -72,13 +72,12 @@ def respond(bot, update):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 def send_gift(bot, update):
-    custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
+    callback_button = [['SEND A GIFT', 'SEND A MESSAGE']]
+    reply_markup = telegram.ReplyKeyboardMarkup(callback_button)
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
 
 
 def choosing_gift(bot, update):
-
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="choosing", reply_markup=reply_markup)
