@@ -1,4 +1,5 @@
 import secret_settings
+import settings
 
 from event_model import Event
 import datetime
@@ -8,9 +9,12 @@ import requests
 
 
 def check_event_dates():
-    events = Event.get_all_events()
-    today =now.day
+    e = Event(settings.HOST, settings.TEST_DB)
 
+    today = now.day
+    events = e.get_all_events()
+    for event in events:
+        print(f"evens   {event}")
     for event in events:
         if today-event['date'] in [7, 2, 1, 0]:
             bot_message = f"friendly reminder its {event['full name']} {event['type']} in {today-event['date']} days"
@@ -28,3 +32,4 @@ def send_notifications():
 
 
 bot_send_notifications("hello my friend")
+check_event_dates()
