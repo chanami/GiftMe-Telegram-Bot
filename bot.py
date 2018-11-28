@@ -1,5 +1,5 @@
 import secret_settings
-import bot_settings
+import settings
 import logging
 
 from telegram.ext import CommandHandler
