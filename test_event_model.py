@@ -36,4 +36,7 @@ def test_event_by_name():
     assert len(tester.get_events_by_name("Malka Levi")) == 1
     assert len(tester.get_events_by_name("Sara Cohen")) == 2
 
+def test_all_events():
+    tester = event_model.Event(settings.HOST, settings.TEST_DB)
+    assert len(tester.get_all_events()) == 5
 

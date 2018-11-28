@@ -31,6 +31,10 @@ class Event:
         return self.events.count_documents({})
 
     def get_all_events(self):
-        a = "aaaaaaa"
-        return a
+        myCursor = self.events.find({})
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
+
 
