@@ -145,7 +145,7 @@ def add_friend(bot, update):
         some_friend.append(address)
         # some_friend.append(False)
         c = Client(settings.HOST, settings.DB)
-        friend = {"full_name ": some_friend[0], "address": some_friend[1]}
+        friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
         message = f"YAY you added an friend"
         some_friend = []
