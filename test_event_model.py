@@ -40,3 +40,9 @@ def test_all_events():
     tester = event_model.Event(settings.HOST, settings.TEST_DB)
     assert len(tester.get_all_events()) == 5
 
+def test_upcoming_events():
+    tester = event_model.Event(settings.HOST, settings.TEST_DB)
+    assert len(tester.get_upcoming_events(datetime.datetime(1990,1,5),datetime.datetime(1990,1,6))) == 0
+    assert len(tester.get_upcoming_events(datetime.datetime(1990,1,5),datetime.datetime(1999,1,6))) == 5
+    assert len(tester.get_upcoming_events(datetime.datetime(1996,3,5),datetime.datetime(1999,1,6))) == 2
+

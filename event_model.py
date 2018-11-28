@@ -37,4 +37,9 @@ class Event:
             list.append(x)
         return list
 
-
+    def get_upcoming_events(self, start, end):
+        myCursor = self.events.find({"date": {"$gt": start, "$lt": end } })
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
