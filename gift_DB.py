@@ -7,8 +7,7 @@ class giftList():
         self.gifts = self.db.get_collection("gifts")
 
     def add_gift(self, type, price, link):
-        self.gifts.insert_one({"type": type, "price":price})#, "link":link})
-        #self.gifts.replace_one({"link":link},{"type": type, "price":price, "link":link},upsert=True)
+        self.gifts.replace_one({"link":link},{"type": type, "price":price, "link":link},upsert=True)
 
     def get_gifts_by_type(self, type):
         myCursor =  self.gifts.find({"type": type})
