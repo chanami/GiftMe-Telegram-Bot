@@ -13,17 +13,20 @@ class Event:
     def delete_event(self, type, date):
         self.events.delete_one({"date":date, "type":type})
 
-    def get_events_by_date(self, chat_id):
-        return self.events.find_one({"date": chat_id})
+    def get_events_by_date(self, date):
+        myCursor =  self.events.find({"date": date})
+        list = []
+        for x in myCursor:
+            list.append(x)
+        return list
 
     def get_events_by_name(self, name):
         return self.events.find_one({"name": name})
 
-    def count_events(self, chat_id):
-        doc = self.get_doc(chat_id)
-        return len(doc['events'])
+    def count_events(self):
+        return self.events.count_documents({})
 
-    def get_all_events(self, chat_id):
-        doc = self.get_doc(chat_id)
-        return doc['events']
+    def get_all_events(self):
+        a = "aaaaaaa"
+        return a
 
