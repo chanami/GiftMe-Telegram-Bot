@@ -64,6 +64,7 @@ def help(bot, update):
 
 def add_event(bot,update):
     global some_event
+
     if(status["add_event"] == 0):
         status["add_event"] = 4
         message = "adding event to a friend :)"
@@ -72,18 +73,22 @@ def add_event(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
         some_event.append(update.message.chat_id)
+
     elif(status["add_event"] == 3):
         name = update.message.text
+
         some_event.append(name)
         message = "Enter Event Type:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
+
     elif (status["add_event"] == 2):
         type = update.message.text
         some_event.append(type)
         message = "Enter event Date <yyyy/mm/dd>: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
+
     elif (status["add_event"] == 1):
         date = update.message.text
         date = date.split('/')
