@@ -4,7 +4,6 @@ from event_model import Event
 import datetime
 import requests
 
-
 def check_event_dates():
     print("here?????----")
     e = Event(settings.HOST, settings.DB)
