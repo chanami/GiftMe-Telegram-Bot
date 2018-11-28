@@ -18,8 +18,8 @@ class Client:
     def add_friend_to_list(self, chat_id, friend):
         self.lists.update_one({"chat_id": chat_id}, {"$push":{ "friends": friend}})
 
-    # def get_friends(self, chat_id):
-    #      return self.db.collection.find({"friends"})
+    def get_friends(self, chat_id):
+          return self.db.find({"Clients"})
 
     # def delete_friend(self, chat_id):
         # self.

@@ -9,6 +9,10 @@ verify_ssl = true
 telegram = "*"
 python-telegram-bot = "*"
 pymongo = "*"
+<<<<<<< HEAD
+=======
+pytest = "*"
+>>>>>>> 365ece038470ec80f6a1b31feb1fb337deeb3874
 
 [requires]
 python_version = "3.7"
