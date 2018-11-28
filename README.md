@@ -2,7 +2,7 @@
 {ONE LINE BOT DESCRIPTION HERE} <https://t.me/{BOT_ID}>
 
 * Yael Yazdi
-* {Chanami Tarshish (Ross)}
+* Chanami Tarshish (Ross)
 * Sari Vagshal
 
 Sometimes in this busy schedule you don’t have time to buy gift for near and dear ones. Gift ME can be one of the best telegram bot ideas for gift delivery. If the user needs to send someone flowers or gifts but he doesn’t have much time, he will use this Gift ME bot and place an online order with the receiver’s address to get the flowers delivered without actually visiting a florist. This bot will also remind you about your friends upcoming events.
