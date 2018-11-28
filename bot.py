@@ -31,6 +31,7 @@ def start(bot, update):
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
+    bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
 
 def respond(bot, update):
@@ -63,7 +64,6 @@ def help(bot, update):
 def add_event(bot, update):
     global some_event
 
-
     if status["add_event"] == 0:
         status["add_event"] = 4
         message = "adding event to a friend :)"
@@ -76,12 +76,21 @@ def add_event(bot, update):
 
     elif status["add_event"] == 3:
         name = update.message.text
-
-        some_event.append(name)
-        message = "Enter Event Type:"
-        bot.send_message(chat_id=update.message.chat_id, text=message)
-        status["add_event"] -= 1
-
+        c = Client(settings.HOST, settings.DB)
+        flag = False
+        for friend in c.get_friends(update.message.chat_id):
+            if friend['full_name '] == name:
+                flag = True
+        if flag:
+            some_event.append(name)
+            message = "Enter Event Type:"
+            bot.send_message(chat_id=update.message.chat_id, text=message)
+            status["add_event"] -= 1
+        else:
+            status["add_event"] = 0
+            some_event = []
+            message = "your friend doesn't exist in the list. add him by /add_friend"
+            bot.send_message(chat_id=update.message.chat_id, text=message)
 
     elif status["add_event"] == 2:
         type = update.message.text
@@ -104,6 +113,9 @@ def add_event(bot, update):
         some_event = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
+
+def delete_event(bot, update):
+    pass
 
 
 def show_upcoming_events(bot, update):
@@ -178,6 +190,9 @@ dispatcher.add_handler(delete_friend_handler)
 
 add_event_handler = CommandHandler('add_event', add_event)
 dispatcher.add_handler(add_event_handler)
+
+delete_event_handler = CommandHandler('delete_event', delete_event)
+dispatcher.add_handler(delete_event_handler)
 
 show_upcoming_events_handler = CommandHandler('show_upcomung_events', show_upcoming_events)
 dispatcher.add_handler(show_upcoming_events_handler)
