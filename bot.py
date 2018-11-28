@@ -39,7 +39,7 @@ def respond(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
-
+    friend_name = ''
     if status["add_member"] == 1:
         name = update.message.text
         client_t.create_new_member(chat_id, name)
@@ -49,10 +49,10 @@ def respond(bot, update):
         print("I")
     if status["add_friend"] == 1:
         friend_name = update.message.text
-        print(friend_name)
+        add_friend()
 
-        if status["add_friend"] == 2:
-            address = update.message.text
+    elif status["add_friend"] == 2:
+        address = update.message.text
         new_friend = {'full_name': friend_name, "address": address}
         client_t.add_friend_to_list(chat_id, new_friend)
         status["add_friend"] == 0
@@ -78,12 +78,13 @@ def show_upcoming_events(bot,update):
 
 def add_friend(bot, update):
     message = "adding an friend! Please enter your friend name:"
-    status["add_friend"] = 1
-    bot.send_message(chat_id=update.message.chat_id, text=message)
-    print("FK")
-    status["add_friend"] = 2
-    message = "Please enter your friend address:"
-    bot.send_message(chat_id = update.message.chat_id, text=message)
+    if status["add_friend"] == 0:
+        status["add_friend"] = 1
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+    elif status["add_friend"] == 1:
+        status["add_friend"] = 2
+        message = "Please enter your friend address:"
+        bot.send_message(chat_id = update.message.chat_id, text=message)
 
 
 start_handler = CommandHandler('start', start)
