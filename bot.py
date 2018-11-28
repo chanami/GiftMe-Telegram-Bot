@@ -1,10 +1,9 @@
 import datetime
-
 import telegram
-
 import secret_settings
 import settings
 import logging
+import notifications
 from event_model import Event
 from help import Help
 from client import Client
@@ -39,37 +38,51 @@ def start(bot, update):
     client_t.create_new_member(chat_id, full_name)
 
 
+kind_present = ""
+
+
 def respond(bot, update):
+    global kind_present
     text = update.message.text
     chat_id = update.message.chat_id
     if text =='SEND A GIFT':
         choosing_gift(bot, update)
         return
-    client_t = Client(settings.HOST, settings.DB)
-    bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
+    elif text =='SEND A MESSAGE':
+        bot.send_message(chat_id=chat_id, text="Working In Progress")
+        return
+    elif text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
+        kind_present = text
+        price_range(bot, update)
+        return
 
-    if status["add_event"]:
+
+    elif status["add_event"]:
         add_event(bot, update)
 
-
-    if status["delete_friend"]:
+    elif status["delete_friend"]:
         print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
 
-    if status['delete_event']:
+    elif status['delete_event']:
         delete_event(bot, update)
 
 
-    if status["add_member"] == 1:
+    elif status["add_member"] == 1:
         name = update.message.text
+        client_t = Client(settings.HOST, settings.DB)
         client_t.create_new_member(chat_id, name)
         status["add_member"] = 0
 
-    if status["add_friend"]:
+    elif status["add_friend"]:
         add_friend(bot, update)
 
+    else:
+        bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
+
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
+
 
 def send_gift(bot, update):
     callback_button = [['SEND A GIFT', 'SEND A MESSAGE']]
@@ -77,21 +90,23 @@ def send_gift(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
 
 
+
 def choosing_gift(bot, update):
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="choosing", reply_markup=reply_markup)
+    bot.send_message(chat_id=update.message.chat_id, text="choose kind of present", reply_markup=reply_markup)
+
 
 def price_range(bot, update):
     custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="price", reply_markup=reply_markup)
+    bot.send_message(chat_id=update.message.chat_id, text="what range of price", reply_markup=reply_markup)
+
 
 def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def add_event(bot, update):
     global some_event
@@ -146,13 +161,17 @@ def add_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
 
+
+
 def delete_event(bot, update):
+
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Enter friend Name ??"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status['delete_event'] = 2
+
     elif status['delete_event'] == 2:
         status['delete_event'] -= 1
         e = Event(settings.HOST, settings.DB)
@@ -170,7 +189,6 @@ def delete_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         ########not complete
 
-
 def show_upcoming_events(bot, update):
     message = "Upcoming Events "
     e = Event(settings.HOST, settings.TEST_DB)
@@ -184,14 +202,15 @@ def show_upcoming_events(bot, update):
             upcoming_events.append(event)
     message += "\n".join(upcoming_events)
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
+    ###not completed
 
 def show_friends(bot, update):
+    message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
     friends = c_model.get_friends(update.message.chat_id)
-    message = "\n".join(friends)
+    for f in friends:
+        message += f"Name: {f['full_name ']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def delete_friend(bot, update):
     c_model = Client(settings.HOST, settings.DB)
@@ -203,7 +222,6 @@ def delete_friend(bot, update):
         print(update.message.text)
         message = "YES"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def add_friend(bot, update):
     global some_friend
@@ -227,7 +245,7 @@ def add_friend(bot, update):
         some_friend.append(address)
         # some_friend.append(False)
         c = Client(settings.HOST, settings.DB)
-        friend = {"full_name ": some_friend[0], "address": some_friend[1]}
+        friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
         message = f"YAY you added an friend"
         some_friend = []
@@ -251,10 +269,13 @@ dispatcher.add_handler(sand_gift_handler)
 add_event_handler = CommandHandler('add_event', add_event)
 dispatcher.add_handler(add_event_handler)
 
+show_friends_handler = CommandHandler('show_friends', show_friends)
+dispatcher.add_handler(show_friends_handler)
+
 delete_event_handler = CommandHandler('delete_event', delete_event)
 dispatcher.add_handler(delete_event_handler)
 
-show_upcoming_events_handler = CommandHandler('show_upcomung_events', show_upcoming_events)
+show_upcoming_events_handler = CommandHandler('show_upcoming_events', show_upcoming_events)
 dispatcher.add_handler(show_upcoming_events_handler)
 
 add_friend_handler = CommandHandler('add_friend', add_friend)
