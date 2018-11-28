@@ -54,12 +54,6 @@ def respond(bot, update):
     if status["add_friend"]:
         add_friend(bot, update)
 
-    # elif status["add_friend"] == 2:
-    #     address = update.message.text
-    #     new_friend = {'full_name': friend_name, "address": address}
-    #     client_t.add_friend_to_list(chat_id, new_friend)
-    #     status["add_friend"] == 0
-
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 def help(bot, update):
