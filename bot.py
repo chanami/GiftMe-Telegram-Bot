@@ -31,6 +31,7 @@ def start(bot, update):
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
+    bot.send_message(chat_id=chat_id, text="you can add your friends by /add_friend and event by /add_event")
 
 
 def respond(bot, update):
@@ -60,7 +61,6 @@ def help(bot, update):
 
 def add_event(bot, update):
     global some_event
-
 
     if status["add_event"] == 0:
         status["add_event"] = 4
