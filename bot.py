@@ -3,6 +3,7 @@ import telegram
 import secret_settings
 import settings
 import logging
+import notifications
 from event_model import Event
 from help import Help
 from client import Client
@@ -36,7 +37,10 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
+
 kind_present = ""
+
+
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -56,8 +60,12 @@ def respond(bot, update):
     elif status["add_event"]:
         add_event(bot, update)
 
+<<<<<<< HEAD
 
     elif status["delete_friend"]:
+=======
+    if status["delete_friend"]:
+>>>>>>> 80fb3ddd9989671dffbdd34db09cacf705f36f2b
         print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
@@ -65,8 +73,12 @@ def respond(bot, update):
     elif status['delete_event']:
         delete_event(bot, update)
 
+<<<<<<< HEAD
 
     elif status["add_member"] == 1:
+=======
+    if status["add_member"] == 1:
+>>>>>>> 80fb3ddd9989671dffbdd34db09cacf705f36f2b
         name = update.message.text
         client_t.create_new_member(chat_id, name)
         status["add_member"] = 0
@@ -79,6 +91,7 @@ def respond(bot, update):
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
+
 def send_gift(bot, update):
     custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
@@ -89,16 +102,23 @@ def choosing_gift(bot, update):
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="choose kind of present", reply_markup=reply_markup)
 
+
 def price_range(bot, update):
     custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="what range of price", reply_markup=reply_markup)
+
 
 def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 80fb3ddd9989671dffbdd34db09cacf705f36f2b
 def add_event(bot, update):
     global some_event
 
@@ -152,6 +172,8 @@ def add_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
 
+
+
 def delete_event(bot, update):
 
     if status['delete_event'] == 0:
@@ -194,9 +216,11 @@ def show_upcoming_events(bot, update):
     ###not completed
 
 def show_friends(bot, update):
+    message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
     friends = c_model.get_friends(update.message.chat_id)
-    message = "\n".join(friends)
+    for f in friends:
+        message += f"Name: {f['full_name ']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 def delete_friend(bot, update):
@@ -232,7 +256,7 @@ def add_friend(bot, update):
         some_friend.append(address)
         # some_friend.append(False)
         c = Client(settings.HOST, settings.DB)
-        friend = {"full_name ": some_friend[0], "address": some_friend[1]}
+        friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
         message = f"YAY you added an friend"
         some_friend = []
@@ -256,10 +280,13 @@ dispatcher.add_handler(sand_gift_handler)
 add_event_handler = CommandHandler('add_event', add_event)
 dispatcher.add_handler(add_event_handler)
 
+show_friends_handler = CommandHandler('show_friends', show_friends)
+dispatcher.add_handler(show_friends_handler)
+
 delete_event_handler = CommandHandler('delete_event', delete_event)
 dispatcher.add_handler(delete_event_handler)
 
-show_upcoming_events_handler = CommandHandler('show_upcomung_events', show_upcoming_events)
+show_upcoming_events_handler = CommandHandler('show_upcoming_events', show_upcoming_events)
 dispatcher.add_handler(show_upcoming_events_handler)
 
 add_friend_handler = CommandHandler('add_friend', add_friend)
