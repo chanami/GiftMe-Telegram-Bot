@@ -1,7 +1,7 @@
-# {YOUR BOT NAME HERE}
+# Gift Me Telegram Bot
 {ONE LINE BOT DESCRIPTION HERE} <https://t.me/{BOT_ID}>
 
-* {Yael Yazdi}
+* Yael Yazdi
 * {Participant 2 Name}
 * {Participant 3 Name}
 
