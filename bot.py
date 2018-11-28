@@ -1,4 +1,7 @@
 import datetime
+
+import telegram
+
 import secret_settings
 import settings
 import logging
@@ -10,7 +13,7 @@ from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
 
-status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0}
+status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_friend":  0}
 some_event = []
 
 some_friend = []
@@ -21,6 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
+
 
 
 def start(bot, update):
@@ -42,6 +46,11 @@ def respond(bot, update):
     if status["add_event"]:
         add_event(bot, update)
 
+    if status["delete_friend"]:
+        print("5555")
+        status["delete_friend"] = 1
+        delete_friend(bot, update)
+
     if status["add_member"] == 1:
         name = update.message.text
         client_t.create_new_member(chat_id, name)
@@ -50,10 +59,12 @@ def respond(bot, update):
     if status["add_friend"]:
         add_friend(bot, update)
 
-
-
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
+def send_gift(bot, update):
+    custom_keyboard = [['SEND A GIFT', 'SEND A MESSAGE']]
+    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
+    bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
 
 def help(bot, update):
     help_o = Help()
@@ -142,10 +153,14 @@ def show_friends(bot, update):
 
 def delete_friend(bot, update):
     c_model = Client(settings.HOST, settings.DB)
-    message = "Please enter the friend you wants to delete:"
-    bot.send_message(chat_id=update.message.chat_id, text=message)
-    name = update.message.text
-    c_model.delete_friend(update.message.chat_id, name)
+    if status["delete_friend"] == 0:
+        message = "Please enter the friend you wants to delete:"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+    elif status["delete_friend"] == 1:
+        c_model.delete_friend(update.message.chat_id, update.message.text)
+        print(update.message.text)
+        message = "YES"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
 def add_friend(bot, update):
@@ -186,6 +201,9 @@ dispatcher.add_handler(help_handler)
 
 delete_friend_handler = CommandHandler('delete_friend', delete_friend)
 dispatcher.add_handler(delete_friend_handler)
+
+sand_gift_handler = CommandHandler('send_gift', send_gift)
+dispatcher.add_handler(sand_gift_handler)
 
 
 add_event_handler = CommandHandler('add_event', add_event)

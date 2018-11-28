@@ -25,4 +25,4 @@ class Client:
         return doc['friends']
 
     def delete_friend(self, chat_id, friend):
-        self.lists.delete_one({"chat_id": chat_id, 'friends': friend})
+        self.lists.delete_one({"chat_id": chat_id, 'friends'[0]: friend})
