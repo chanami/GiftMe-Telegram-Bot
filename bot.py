@@ -55,17 +55,12 @@ def respond(bot, update):
         kind_present = text
         price_range(bot, update)
         return
-    client_t = Client(settings.HOST, settings.DB)
+
 
     elif status["add_event"]:
         add_event(bot, update)
 
-<<<<<<< HEAD
-
     elif status["delete_friend"]:
-=======
-    if status["delete_friend"]:
->>>>>>> 80fb3ddd9989671dffbdd34db09cacf705f36f2b
         print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
@@ -73,13 +68,10 @@ def respond(bot, update):
     elif status['delete_event']:
         delete_event(bot, update)
 
-<<<<<<< HEAD
 
     elif status["add_member"] == 1:
-=======
-    if status["add_member"] == 1:
->>>>>>> 80fb3ddd9989671dffbdd34db09cacf705f36f2b
         name = update.message.text
+        client_t = Client(settings.HOST, settings.DB)
         client_t.create_new_member(chat_id, name)
         status["add_member"] = 0
 
@@ -114,11 +106,6 @@ def help(bot, update):
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 80fb3ddd9989671dffbdd34db09cacf705f36f2b
 def add_event(bot, update):
     global some_event
 
