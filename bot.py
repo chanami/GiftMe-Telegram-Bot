@@ -9,6 +9,8 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
+status = {"add_friend":  0, "add_event": 0, "send_gift": 0}
+
 some_event = []
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -49,15 +51,18 @@ def help(bot, update):
 def add_event(bot,update):
     message = "adding event to a friend :)"
     bot.send_message(chat_id=update.message.chat_id, text=message)
+    status["add_event"] = 1
     message = "Please enter your friend name: "
     bot.send_message(chat_id=update.message.chat_id, text=message)
     
 
 def add_friend(bot, update):
+    status["add_friend"] = 1
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     text = update.message.text
     client_t.add_friend_to_list(chat_id, text)
+
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
