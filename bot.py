@@ -1,4 +1,6 @@
 import datetime
+
+import requests
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -30,8 +32,6 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
-# [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
-####
 def button(bot, update):
     global kind_present
     query = update.callback_query
@@ -56,25 +56,52 @@ def button(bot, update):
         logger.info(f"= Got on chat #{chat_id}: pressed Chocolates button")
         price_range(bot, update)
     elif query.data == 'Surprise_Gift':
-        kind_present = 'Surprise_Gift'
+        kind_present = 'Surprise Gift'
         logger.info(f"= Got on chat #{chat_id}: pressed Surprise Gift button")
         price_range(bot, update)
     elif query.data == '20 40':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
-            bot.send_message(chat_id=chat_id, text=g["price"])
+            link = g["link"]
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
     elif query.data == '40 60':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        get_elements(kind_present, query.data)
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            link = g["link"]
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
     elif query.data == '60 80':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        get_elements(kind_present, query.data)
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            link = g["link"]
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
     elif query.data == '80 100':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        get_elements(kind_present, query.data)
 
-####
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            link = g["link"]
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
+    else:
+        print("start callback") #start callback(query.data)
 
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
@@ -86,14 +113,9 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
-
-kind_present = ""
-
-
 def get_elements(kind_present, text):
     g = giftList(settings.HOST, settings.DB)
     return g.get_gifts_by_cond(kind_present, text)
-
 
 def respond(bot, update):
     global kind_present
@@ -125,8 +147,6 @@ def respond(bot, update):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 def send_gift(bot, update):
-    # query = update.callback_query
-    # chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -243,6 +263,7 @@ def add_event(bot, update):
         status["add_event"] -= 1
         send_notification(bot,update)
 
+
 def delete_event(bot, update):
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
@@ -268,6 +289,7 @@ def delete_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         ########not complete
 
+
 def show_upcoming_events(bot, update):
     message = "Upcoming Events "
     e = Event(settings.HOST, settings.DB)
@@ -283,6 +305,7 @@ def show_upcoming_events(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
     ###not completed
 
+
 def show_friends(bot, update):
     message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
@@ -290,6 +313,7 @@ def show_friends(bot, update):
     for f in friends:
         message += f"Name: {f['full_name ']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def delete_friend(bot, update):
     c_model = Client(settings.HOST, settings.DB)
@@ -301,6 +325,7 @@ def delete_friend(bot, update):
         print(update.message.text)
         message = "YES"
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def add_friend(bot, update):
     global some_friend
