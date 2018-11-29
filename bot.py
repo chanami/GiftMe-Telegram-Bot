@@ -16,7 +16,7 @@ import logging
 status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0,"delete_friend":  0}
 
 some_event = []
-
+delete = []
 some_friend = []
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -255,7 +255,7 @@ def add_event(bot, update):
         name = update.message.text
         c = Client(settings.HOST, settings.DB)
         flag = False
-        for friend in c.get_friends(update.message.chat_id):
+        for friend in c.get_all_friends(update.message.chat_id):
             if friend['full_name'] == name:
                 flag = True
         if flag:
@@ -293,28 +293,49 @@ def add_event(bot, update):
 
 
 
+
+
 def delete_event(bot, update):
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Enter friend Name ??"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        status['delete_event'] = 2
+        status['delete_event'] = 3
 
-    elif status['delete_event'] == 2:
+    elif status['delete_event'] == 3:
         status['delete_event'] -= 1
         e = Event(settings.HOST, settings.DB)
         ev = e.get_events_by_name(update.message.text)
         if len(ev) == 0:
-            message = "you don't have such friend"
+            status['delete_event'] = 0
+            message = "you don't have such friend-event"
             bot.send_message(chat_id=update.message.chat_id, text=message)
             return
+        delete.append(update.message.text)
         message = ""
         for event in ev:
-            print(event["type"])
-            print(event["date"])
             message += "=> {} on {}\n".format(event["type"], event["date"])
         message += "enter type event:"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+
+    elif status['delete_event'] == 2:
+        status['delete_event'] -= 1
+        type = update.message.text
+        delete.append(type)
+        message = "enter date of event:"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+
+    elif status['delete_event'] == 1:
+        status['delete_event'] -= 1
+        date = update.message.text
+        date = date.split('/')
+        date = [int(d) for d in date]
+        date = datetime.datetime(*date)
+        delete.append(date)
+        e = Event(settings.HOST, settings.DB)
+        e.delete_event(*delete)
+        message = "Deleted :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
@@ -328,7 +349,7 @@ def show_upcoming_events(bot, update):
         d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
         delta = d1 - d0
         if delta.days < 10:
-            upcoming_events.append(event)
+            upcoming_events.append(str(event))
     message += "\n".join(upcoming_events)
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
@@ -336,7 +357,7 @@ def show_upcoming_events(bot, update):
 def show_friends(bot, update):
     message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
-    friends = c_model.get_friends(update.message.chat_id)
+    friends = c_model.get_all_friends(update.message.chat_id)
     for f in friends:
         message += f"Name: {f['full_name']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
