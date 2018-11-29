@@ -21,6 +21,7 @@ status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "de
 some_event = []
 delete = []
 some_friend = []
+price_object = [0]
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
     level=logging.INFO)
@@ -124,6 +125,7 @@ def button(bot, update):
 
     else:
         print("start callback")  # start callback(query.data)
+        price_object[0]=int(query.data)
         start_shipping_callback(bot,update,query.data)
 
 
@@ -445,7 +447,7 @@ def start_with_shipping_callback(bot, update):
     start_parameter = "test-payment"
     currency = "USD"
     # price in dollars
-    price = 1
+    price = price_object[0] if price_object[0] else 1
     # price * 100 so as to include 2 d.p.
     # check https://core.telegram.org/bots/payments#supported-currencies for more details
     prices = [LabeledPrice("Test", price * 100)]
@@ -469,7 +471,7 @@ def start_without_shipping_callback(bot, update):
     start_parameter = "test-payment"
     currency = "USD"
     # price in dollars
-    price = 1
+    price = price_object[0] if price_object[0] else 1
     # price * 100 so as to include 2 d.p.
     prices = [LabeledPrice("Test", price * 100)]
 
