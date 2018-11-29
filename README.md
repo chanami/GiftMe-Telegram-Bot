@@ -11,11 +11,11 @@ https://gift-me.monday.com/boards/153303190/
 ### Screenshots
 
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/1.PNG)
-*1
+### 1
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/2.PNG)
-*2
+### 2
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/3.PNG)
-*3
+### 3
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/4.PNG)
 *4
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/5.PNG)
