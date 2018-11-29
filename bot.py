@@ -1,6 +1,9 @@
 import datetime
+from functools import wraps
+from time import sleep
+
 import telegram
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ChatAction
 import secret_settings
 import settings
 from event_model import Event
@@ -27,6 +30,23 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
+
+def send_action(action):
+    """Sends `action` while processing func command."""
+    def decorator(func):
+        @wraps(func)
+        def command_func(*args, **kwargs):
+            bot, update = args
+            bot.send_chat_action(chat_id=update.message.chat_id, action=action)
+            func(bot, update, **kwargs)
+
+        return command_func
+
+    return decorator
+
+@send_action(ChatAction.TYPING)
+def typing(bot, update):
+    sleep(2)
 
 
 def button(bot, update):
@@ -98,7 +118,7 @@ def button(bot, update):
             bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
     elif query.data == 'MESSAGE':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        bot.send_message(chat_id=chat_id, text="sended the Wish Card to your friend!")
+        bot.send_message(chat_id=chat_id, text="Wish Card was sent to your friend!")
 
     else:
         print("start callback")  # start callback(query.data)
@@ -106,6 +126,7 @@ def button(bot, update):
 
 
 def start(bot, update):
+    typing(bot, update)
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
@@ -122,6 +143,7 @@ def get_elements(kind_present, text):
 
 
 def respond(bot, update):
+    typing(bot, update)
     global kind_present
     text = update.message.text
     chat_id = update.message.chat_id
@@ -152,6 +174,7 @@ def respond(bot, update):
 
 
 def send_gift(bot, update):
+    typing(bot, update)
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -160,6 +183,7 @@ def send_gift(bot, update):
 
 
 def choosing_gift(bot, update):
+    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Flowers", callback_data='Flowers'),
@@ -171,6 +195,7 @@ def choosing_gift(bot, update):
 
 
 def choosing_message(bot, update):
+    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='MESSAGE')],
@@ -182,6 +207,7 @@ def choosing_message(bot, update):
 
 
 def price_range(bot, update):
+    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("20$ - 40$", callback_data='20 40'),
@@ -194,12 +220,14 @@ def price_range(bot, update):
 
 
 def help(bot, update):
+    typing(bot, update)
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
 def send_notification(bot, update, current_event):
+    typing(bot, update)
     event_date = current_event[3]
     d0 = datetime.datetime.now()
     d1 = datetime.datetime(d0.year, event_date.month, event_date.day)
@@ -238,6 +266,7 @@ def send_notification(bot, update, current_event):
 
 
 def add_event(bot, update):
+    typing(bot, update)
     global some_event
 
     if status["add_event"] == 0:
@@ -291,10 +320,11 @@ def add_event(bot, update):
 
 
 def delete_event(bot, update):
+    typing(bot, update)
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        message = "Enter friend Name ??"
+        message = "Enter your friend Name ??"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status['delete_event'] = 3
 
@@ -304,7 +334,7 @@ def delete_event(bot, update):
         ev = e.get_events_by_name(update.message.text)
         if len(ev) == 0:
             status['delete_event'] = 0
-            message = "you don't have such friend-event"
+            message = "you friend does not have this event :("
             bot.send_message(chat_id=update.message.chat_id, text=message)
             return
         delete.append(update.message.text)
@@ -335,6 +365,7 @@ def delete_event(bot, update):
 
 
 def show_upcoming_events(bot, update):
+    typing(bot, update)
     message = "Upcoming Events \n"
     e = Event(settings.HOST, settings.DB)
     events = e.get_all_events()
@@ -364,6 +395,7 @@ def show_friends(bot, update):
 
 
 def delete_friend(bot, update):
+    typing(bot, update)
     c_model = Client(settings.HOST, settings.DB)
     if status["delete_friend"] == 0:
         message = "Please enter the friend you wants to delete:"
@@ -376,6 +408,7 @@ def delete_friend(bot, update):
 
 
 def add_friend(bot, update):
+    typing(bot, update)
     global some_friend
     if status["add_friend"] == 0:
         status["add_friend"] = 3
@@ -409,6 +442,7 @@ def error(bot, update, error):
 
 
 def start_shipping_callback(bot, update):
+    typing(bot, update)
     if update.callback_query.message:
         mes = update.callback_query.message
     else:
@@ -421,6 +455,7 @@ def start_shipping_callback(bot, update):
 
 
 def start_with_shipping_callback(bot, update):
+    typing(bot, update)
     chat_id = update.message.chat_id
     title = "Payment Example"
     description = "Payment Example using python-telegram-bot"
@@ -466,9 +501,8 @@ def start_without_shipping_callback(bot, update):
 
 
 def shipping_callback(bot, update):
-    print("hhere")
+    typing(bot, update)
     query = update.shipping_query
-    print(query)
     # check the payload, is this from your bot?
     if query.invoice_payload != 'Custom-Payload':
         # answer False pre_checkout_query
