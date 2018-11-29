@@ -366,7 +366,7 @@ def delete_event(bot, update):
 
 def show_upcoming_events(bot, update):
     typing(bot, update)
-    message = "Upcoming Events \n"
+    message = "Upcoming Events ➙ \n"
     e = Event(settings.HOST, settings.DB)
     events = e.get_all_events()
     upcoming_events = []
