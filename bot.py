@@ -7,7 +7,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import secret_settings
 import settings
 import logging
-import notifications
 from event_model import Event
 from help import Help
 from client import Client
