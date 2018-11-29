@@ -204,7 +204,7 @@ def choosing_message(bot, update):
                  [InlineKeyboardButton("Happy Valentine's Day!!", callback_data='MESSAGE')],
                  [InlineKeyboardButton("Congratulations!!!", callback_data='MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    bot.send_message(chat_id=chat_id, text="choose your wish", reply_markup=reply_markup)
+    bot.send_message(chat_id=chat_id, text="choose your wish 😍", reply_markup=reply_markup)
 
 
 def price_range(bot, update):
@@ -234,11 +234,11 @@ def send_notification(bot, update, current_event):
     d1 = datetime.datetime(d0.year, event_date.month, event_date.day)
     delta = d1 - d0
     if str(delta.days) in "7321":
-        bot_message = f"Friendly Reminder its {current_event[1]} {current_event[2]} in {delta.days}" + (
+        bot_message = f" ⚠ Friendly Reminder its {current_event[1]} {current_event[2]} in {delta.days}" + (
             f"days" if delta.days > 1 else "day")
 
     elif delta.days == 0:
-        bot_message = f"Friendly Reminder its {current_event[1]} {current_event[2]}" + (
+        bot_message = f" ⚠ Friendly Reminder its {current_event[1]} {current_event[2]}" + (
             " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
     else:
         return
@@ -272,7 +272,7 @@ def add_event(bot, update):
 
     if status["add_event"] == 0:
         status["add_event"] = 4
-        message = "adding event to a friend :)"
+        message = "adding event to a friend 😉"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Please enter your friend's name: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
@@ -294,7 +294,7 @@ def add_event(bot, update):
         else:
             status["add_event"] = 0
             some_event = []
-            message = "your friend doesn't exist in the list. add him by /add_friend"
+            message = " 🤔 your friend doesn't exist in the list. add him by /add_friend"
             bot.send_message(chat_id=update.message.chat_id, text=message)
 
     elif status["add_event"] == 2:
@@ -313,7 +313,7 @@ def add_event(bot, update):
         some_event.append(False)
         e = Event(settings.HOST, settings.DB)
         e.add_event(*some_event)
-        message = f"YAY you added an event to {some_event[1]}"
+        message = f"YAY you added an event to {some_event[1]} 😊"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         send_notification(bot, update, some_event)
         some_event = []
@@ -323,9 +323,9 @@ def add_event(bot, update):
 def delete_event(bot, update):
     typing(bot, update)
     if status['delete_event'] == 0:
-        message = "OH NO you are deleting an event :("
+        message = "OH NO you are deleting an event 😧"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        message = "Enter your friend Name ??"
+        message = "Enter your friend Name:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status['delete_event'] = 3
 
@@ -335,7 +335,7 @@ def delete_event(bot, update):
         ev = e.get_events_by_name(update.message.text)
         if len(ev) == 0:
             status['delete_event'] = 0
-            message = "you friend does not have this event :("
+            message = "🤔 you friend does not have this event"
             bot.send_message(chat_id=update.message.chat_id, text=message)
             return
         delete.append(update.message.text)
@@ -367,7 +367,7 @@ def delete_event(bot, update):
 
 def show_upcoming_events(bot, update):
     typing(bot, update)
-    message = "Upcoming Events \n"
+    message = "Upcoming Events ➙ \n"
     e = Event(settings.HOST, settings.DB)
     events = e.get_all_events()
     upcoming_events = []
@@ -387,7 +387,7 @@ def show_upcoming_events(bot, update):
 
 
 def show_friends(bot, update):
-    message = "All of Your Friends\n"
+    message = "All of Your Friends ➙ \n"
     c_model = Client(settings.HOST, settings.DB)
     friends = c_model.get_all_friends(update.message.chat_id)
     for f in friends:
