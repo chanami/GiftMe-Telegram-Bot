@@ -70,8 +70,6 @@ def get_elements(kind_present, text):
         if x == y:
             gift_in_range.append(x)
 
-
-
 def respond(bot, update):
     global kind_present
     text = update.message.text
@@ -85,12 +83,18 @@ def respond(bot, update):
         choosing_message(bot, update)
         return
 
+    elif text in ['Happy Birthday!!!', 'Happy anniversary!!', "Happy Valentine's Day!!", 'Congratulations!!!']:
+        bot.send_message(chat_id=chat_id, text="The Message Is Send!!!")
+        return
+
     elif text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
         kind_present = text
         price_range(bot, update)
         return
+
     elif text in ['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']:
         get_elements(kind_present, text)
+
 
     elif status["add_event"]:
         add_event(bot, update)
