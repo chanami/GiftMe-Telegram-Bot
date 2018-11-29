@@ -1,9 +1,6 @@
 import datetime
-
-import requests
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
 import secret_settings
 import settings
 import logging
@@ -15,7 +12,10 @@ from gift_DB import giftList
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
-
+from telegram import (LabeledPrice, ShippingOption)
+from telegram.ext import (Updater, CommandHandler, MessageHandler,
+                          Filters, PreCheckoutQueryHandler, ShippingQueryHandler)
+import logging
 
 status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0,"delete_friend":  0}
 
@@ -31,6 +31,8 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
+
+
 def button(bot, update):
     global kind_present
     query = update.callback_query
@@ -99,7 +101,9 @@ def button(bot, update):
             bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
 
     else:
-        print("start callback") #start callback(query.data)
+        print("start callback")  # start callback(query.data)
+        start_shiping_callback(bot,update)
+
 
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
@@ -111,9 +115,11 @@ def start(bot, update):
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
 
+
 def get_elements(kind_present, text):
     g = giftList(settings.HOST, settings.DB)
     return g.get_gifts_by_cond(kind_present, text)
+
 
 def respond(bot, update):
     global kind_present
@@ -144,12 +150,14 @@ def respond(bot, update):
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
+
 def send_gift(bot, update):
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="what is your choice?",
                      reply_markup=reply_markup)
+
 
 def choosing_gift(bot, update):
     query = update.callback_query
@@ -162,6 +170,7 @@ def choosing_gift(bot, update):
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
+
 def choosing_message(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
@@ -171,6 +180,7 @@ def choosing_message(bot, update):
                  [InlineKeyboardButton("Congratulations!!!", callback_data='Chocolates')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
+
 
 def price_range(bot, update):
     query = update.callback_query
@@ -184,10 +194,12 @@ def price_range(bot, update):
     bot.send_message(chat_id=chat_id, text="what is your choice?",
                      reply_markup=reply_markup)
 
+
 def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def send_notification(bot,update):
     e = Event(settings.HOST, settings.DB)
@@ -208,6 +220,7 @@ def send_notification(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text=bot_message)
         bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
+
 
 def add_event(bot, update):
     global some_event
@@ -354,6 +367,99 @@ def add_friend(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_friend"] -= 1
 
+def error(bot, update, error):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, error)
+
+
+def start_shiping_callback(bot, update):
+    msg = "Use /shipping to get an invoice for shipping-payment, "
+    msg += "or /noshipping for an invoice without shipping."
+    update.message.reply_text(msg)
+
+
+def start_with_shipping_callback(bot, update):
+    chat_id = update.message.chat_id
+    title = "Payment Example"
+    description = "Payment Example using python-telegram-bot"
+    # select a payload just for you to recognize its the donation from your bot
+    payload = "Custom-Payload"
+    # In order to get a provider_token see https://core.telegram.org/bots/payments#getting-a-token
+    provider_token = "284685063:TEST:ODdmNGVkMzViZjYw"
+    start_parameter = "test-payment"
+    currency = "USD"
+    # price in dollars
+    price = 1
+    # price * 100 so as to include 2 d.p.
+    # check https://core.telegram.org/bots/payments#supported-currencies for more details
+    prices = [LabeledPrice("Test", price * 100)]
+
+    # optionally pass need_name=True, need_phone_number=True,
+    # need_email=True, need_shipping_address=True, is_flexible=True
+    bot.sendInvoice(chat_id, title, description, payload,
+                    provider_token, start_parameter, currency, prices,
+                    need_name=True, need_phone_number=True,
+                    need_email=True, need_shipping_address=True, is_flexible=True)
+
+
+def start_without_shipping_callback(bot, update):
+    chat_id = update.message.chat_id
+    title = "Payment Example"
+    description = "Payment Example using python-telegram-bot"
+    # select a payload just for you to recognize its the donation from your bot
+    payload = "Custom-Payload"
+    # In order to get a provider_token see https://core.telegram.org/bots/payments#getting-a-token
+    provider_token = "284685063:TEST:ODdmNGVkMzViZjYw"
+    start_parameter = "test-payment"
+    currency = "USD"
+    # price in dollars
+    price = 1
+    # price * 100 so as to include 2 d.p.
+    prices = [LabeledPrice("Test", price * 100)]
+
+    # optionally pass need_name=True, need_phone_number=True,
+    # need_email=True, need_shipping_address=True, is_flexible=True
+    bot.sendInvoice(chat_id, title, description, payload,
+                    provider_token, start_parameter, currency, prices)
+
+
+def shipping_callback(bot, update):
+    print("hhere")
+    query = update.shipping_query
+    print(query)
+    # check the payload, is this from your bot?
+    if query.invoice_payload != 'Custom-Payload':
+        # answer False pre_checkout_query
+        bot.answer_shipping_query(shipping_query_id=query.id, ok=False,
+                                  error_message="Something went wrong...")
+        return
+    else:
+        options = list()
+        # a single LabeledPrice
+        options.append(ShippingOption('1', 'Shipping Option A', [LabeledPrice('A', 100)]))
+        # an array of LabeledPrice objects
+        price_list = [LabeledPrice('B1', 150), LabeledPrice('B2', 200)]
+        options.append(ShippingOption('2', 'Shipping Option B', price_list))
+        bot.answer_shipping_query(shipping_query_id=query.id, ok=True,
+                                  shipping_options=options)
+
+
+# after (optional) shipping, it's the pre-checkout
+def precheckout_callback(bot, update):
+    query = update.pre_checkout_query
+    # check the payload, is this from your bot?
+    if query.invoice_payload != 'Custom-Payload':
+        # answer False pre_checkout_query
+        bot.answer_pre_checkout_query(pre_checkout_query_id=query.id, ok=False,
+                                      error_message="Something went wrong...")
+    else:
+        bot.answer_pre_checkout_query(pre_checkout_query_id=query.id, ok=True)
+
+
+# finally, after contacting to the payment provider...
+def successful_payment_callback(bot, update):
+    # do something after successful receive of payment?
+    update.message.reply_text("Thank you for your payment!")
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
@@ -382,6 +488,22 @@ dispatcher.add_handler(show_upcoming_events_handler)
 
 add_friend_handler = CommandHandler('add_friend', add_friend)
 dispatcher.add_handler(add_friend_handler)
+
+# Add command handler to start the payment invoice
+dispatcher.add_handler(CommandHandler("shipping", start_with_shipping_callback))
+dispatcher.add_handler(CommandHandler("noshipping", start_without_shipping_callback))
+
+# Optional handler if your product requires shipping
+dispatcher.add_handler(ShippingQueryHandler(shipping_callback))
+
+# Pre-checkout handler to final check
+dispatcher.add_handler(PreCheckoutQueryHandler(precheckout_callback))
+
+# Success! Notify your user!
+dispatcher.add_handler(MessageHandler(Filters.successful_payment, successful_payment_callback))
+
+# log all errors
+dispatcher.add_error_handler(error)
 
 echo_handler = MessageHandler(Filters.text, respond)
 dispatcher.add_handler(echo_handler)
