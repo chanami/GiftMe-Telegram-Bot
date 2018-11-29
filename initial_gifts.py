@@ -1,7 +1,6 @@
 import settings
 from gift_DB import giftList
 
-#['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']
 def initial():
     g = giftList(settings.HOST, settings.DB)
     g.add_gift('Flowers', 20, "http://media4.1800flowers.com/800f_assets/images/flowers/images/shop/catalog/91798Lz.jpg")
