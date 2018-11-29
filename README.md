@@ -1,5 +1,5 @@
 # Gift Me Telegram Bot
-{ONE LINE BOT DESCRIPTION HERE} <https://t.me/{BOT_ID}>
+http://t.me/giftMe_bot
 
 * Yael Yazdi
 * Chanami Tarshish (Ross)
@@ -10,7 +10,14 @@ Sometimes in this busy schedule you don’t have time to buy gift for near and d
 https://gift-me.monday.com/boards/153303190/
 ### Screenshots
 
-![SCREESHOT DECSRIPTION](screenshots/shopping-list-bot-1.png)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/1.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/2.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/3.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/4.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/5.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/6.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/7.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/8.PNG)
 
 ## How to Run This Bot
 
