@@ -10,7 +10,8 @@ Sometimes in this busy schedule you don’t have time to buy gift for near and d
 https://gift-me.monday.com/boards/153303190/
 ### Screenshots
 
-![SCREESHOT DECSRIPTION](screenshots/shopping-list-bot-1.png)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/1.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/2.PNG)
 
 ## How to Run This Bot
 
