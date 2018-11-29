@@ -87,8 +87,6 @@ def send_gift(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="GIFT", reply_markup=reply_markup)
 
 
-
-
 def choosing_gift(bot, update):
     custom_keyboard = [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
@@ -180,6 +178,7 @@ def add_event(bot, update):
         status["add_event"] -= 1
         send_notification(bot,update)
 
+
 def delete_event(bot, update):
 
     if status['delete_event'] == 0:
@@ -206,6 +205,7 @@ def delete_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         ########not complete
 
+
 def show_upcoming_events(bot, update):
     message = "Upcoming Events "
     e = Event(settings.HOST, settings.TEST_DB)
@@ -221,6 +221,7 @@ def show_upcoming_events(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
     ###not completed
 
+
 def show_friends(bot, update):
     message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
@@ -228,6 +229,7 @@ def show_friends(bot, update):
     for f in friends:
         message += f"Name: {f['full_name ']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def delete_friend(bot, update):
     c_model = Client(settings.HOST, settings.DB)
@@ -239,6 +241,7 @@ def delete_friend(bot, update):
         print(update.message.text)
         message = "YES"
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 def add_friend(bot, update):
     global some_friend
