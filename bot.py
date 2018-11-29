@@ -91,6 +91,7 @@ def button(bot, update):
 
     elif query.data == '80 100':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
+
         gif = get_elements(kind_present, query.data)
         for g in gif:
             link = g["link"]
