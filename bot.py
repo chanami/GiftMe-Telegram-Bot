@@ -41,6 +41,7 @@ def button(bot, update):
         choosing_gift(bot, update)
     elif query.data == 'SEND A MESSAGE':
         logger.info(f"= Got on chat #{chat_id}: pressed send a message button")
+        choosing_message(bot, update)
         pass
     elif query.data == 'Flowers':
         kind_present = 'Flowers'
@@ -85,6 +86,9 @@ def start(bot, update):
     client_t.create_new_member(chat_id, full_name)
 
 
+kind_present = ""
+
+
 def get_elements(kind_present, text):
     g = giftList(settings.HOST, settings.DB)
     return g.get_gifts_by_cond(kind_present, text)
@@ -94,6 +98,7 @@ def respond(bot, update):
     global kind_present
     text = update.message.text
     chat_id = update.message.chat_id
+<<<<<<< HEAD
     # if text =='SEND A GIFT':
     #     choosing_gift(bot, update)
     #     return
@@ -108,10 +113,28 @@ def respond(bot, update):
     #     return get_elements(kind_present, text)
 
     if status["add_event"]:
+=======
+    if text =='SEND A GIFT':
+        choosing_gift(bot, update)
+        return
+
+    elif text =='SEND A MESSAGE':
+        bot.send_message(chat_id=chat_id, text="Working In Progress")
+        choosing_message(bot, update)
+        return
+
+    elif text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
+        kind_present = text
+        price_range(bot, update)
+        return
+    elif text in ['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']:
+        get_elements(kind_present, text)
+
+    elif status["add_event"]:
+>>>>>>> a09280a8a52fbf7491a1431de2bbb6b7bdfb3d21
         add_event(bot, update)
 
     elif status["delete_friend"]:
-        print("5555")
         status["delete_friend"] = 1
         delete_friend(bot, update)
 
@@ -141,6 +164,10 @@ def send_gift(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="what is your choice?",
                      reply_markup=reply_markup)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a09280a8a52fbf7491a1431de2bbb6b7bdfb3d21
 def choosing_gift(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
@@ -152,6 +179,19 @@ def choosing_gift(bot, update):
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
+<<<<<<< HEAD
+=======
+def choosing_message(bot, update):
+    query = update.callback_query
+    chat_id = query.message.chat_id
+    keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='Flowers')],
+                 [InlineKeyboardButton("Happy anniversary!!", callback_data='Balloons')],
+                 [InlineKeyboardButton("Happy Valentine's Day!!", callback_data='Chocolates')],
+                 [InlineKeyboardButton("Congratulations!!!", callback_data='Chocolates')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
+
+>>>>>>> a09280a8a52fbf7491a1431de2bbb6b7bdfb3d21
 def price_range(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
