@@ -31,6 +31,7 @@ dispatcher = updater.dispatcher
 
 kind_present = ""
 
+
 def send_action(action):
     """Sends `action` while processing func command."""
     def decorator(func):
@@ -122,7 +123,7 @@ def button(bot, update):
 
     else:
         print("start callback")  # start callback(query.data)
-        start_shipping_callback(bot,update)
+        start_shipping_callback(bot,update,query.data)
 
 
 def start(bot, update):
@@ -441,7 +442,8 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def start_shipping_callback(bot, update):
+def start_shipping_callback(bot, update,tmp):
+    print(tmp)
     typing(bot, update)
     if update.callback_query.message:
         mes = update.callback_query.message
