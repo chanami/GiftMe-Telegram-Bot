@@ -412,7 +412,7 @@ def add_friend(bot, update):
     global some_friend
     if status["add_friend"] == 0:
         status["add_friend"] = 3
-        message = "adding friend :)"
+        message = "adding friend 🙂"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Please enter your friend's name: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
