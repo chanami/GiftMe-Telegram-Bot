@@ -209,7 +209,7 @@ def send_notification(bot, update, current_event):
             f"days" if delta.days > 1 else "day")
 
     elif delta.days == 0:
-        bot_message = f"Friendly Reminder its {current_event[1]} {current_event[2]}" + (
+        bot_message = f" ⚠ Friendly Reminder its {current_event[1]} {current_event[2]}" + (
             " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
     else:
         return
