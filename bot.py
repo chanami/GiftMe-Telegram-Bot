@@ -45,6 +45,7 @@ def send_action(action):
 
     return decorator
 
+
 @send_action(ChatAction.TYPING)
 def typing(bot, update):
     sleep(2)
@@ -184,7 +185,6 @@ def send_gift(bot, update):
 
 
 def choosing_gift(bot, update):
-    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Flowers", callback_data='Flowers'),
@@ -196,7 +196,6 @@ def choosing_gift(bot, update):
 
 
 def choosing_message(bot, update):
-    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='MESSAGE')],
@@ -208,7 +207,6 @@ def choosing_message(bot, update):
 
 
 def price_range(bot, update):
-    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("20$ - 40$", callback_data='20 40'),
@@ -269,7 +267,6 @@ def send_notification(bot, update, current_event):
 def add_event(bot, update):
     typing(bot, update)
     global some_event
-
     if status["add_event"] == 0:
         status["add_event"] = 4
         message = "adding event to a friend 😉"
@@ -444,7 +441,6 @@ def error(bot, update, error):
 
 def start_shipping_callback(bot, update,tmp):
     print(tmp)
-    typing(bot, update)
     if update.callback_query.message:
         mes = update.callback_query.message
     else:
