@@ -3,15 +3,11 @@ import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import secret_settings
 import settings
-import logging
 from event_model import Event
 from help import Help
 from client import Client
 from telegram.ext import CommandHandler, CallbackQueryHandler
 from gift_DB import giftList
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
-from telegram.ext import Updater
 from telegram import (LabeledPrice, ShippingOption)
 from telegram.ext import (Updater, CommandHandler, MessageHandler,
                           Filters, PreCheckoutQueryHandler, ShippingQueryHandler)
@@ -464,6 +460,7 @@ def precheckout_callback(bot, update):
 def successful_payment_callback(bot, update):
     # do something after successful receive of payment?
     update.message.reply_text("Thank you for your payment!")
+
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
