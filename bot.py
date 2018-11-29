@@ -322,9 +322,9 @@ def add_event(bot, update):
 def delete_event(bot, update):
     typing(bot, update)
     if status['delete_event'] == 0:
-        message = "OH NO you are deleting an event :("
+        message = "OH NO you are deleting an event 😧"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        message = "Enter your friend Name ??"
+        message = "Enter your friend Name:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status['delete_event'] = 3
 
@@ -334,7 +334,7 @@ def delete_event(bot, update):
         ev = e.get_events_by_name(update.message.text)
         if len(ev) == 0:
             status['delete_event'] = 0
-            message = "you friend does not have this event :("
+            message = "🤔 you friend does not have this event"
             bot.send_message(chat_id=update.message.chat_id, text=message)
             return
         delete.append(update.message.text)
