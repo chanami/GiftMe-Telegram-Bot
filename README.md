@@ -12,6 +12,7 @@ https://gift-me.monday.com/boards/153303190/
 
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/1.PNG)
 ![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/2.PNG)
+![SCREESHOT DECSRIPTION](https://github.com/Elevationacademy/xt-bot-hackathon-ella-team-4/blob/master/screenshots/3.PNG)
 
 ## How to Run This Bot
 
