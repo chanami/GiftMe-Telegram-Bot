@@ -1,6 +1,9 @@
 import datetime
+from functools import wraps
+from time import sleep
+
 import telegram
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ChatAction
 import secret_settings
 import settings
 from event_model import Event
@@ -16,7 +19,7 @@ import logging
 status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0,"delete_friend":  0}
 
 some_event = []
-
+delete = []
 some_friend = []
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -27,6 +30,23 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
+
+def send_action(action):
+    """Sends `action` while processing func command."""
+    def decorator(func):
+        @wraps(func)
+        def command_func(*args, **kwargs):
+            bot, update = args
+            bot.send_chat_action(chat_id=update.message.chat_id, action=action)
+            func(bot, update, **kwargs)
+
+        return command_func
+
+    return decorator
+
+@send_action(ChatAction.TYPING)
+def typing(bot, update):
+    sleep(2)
 
 
 def button(bot, update):
@@ -98,19 +118,20 @@ def button(bot, update):
             bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
     elif query.data == 'MESSAGE':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        bot.send_message(chat_id=chat_id, text="sended the Wish Card to your friend!")
+        bot.send_message(chat_id=chat_id, text="Wish Card was sent to your friend!")
 
     else:
         print("start callback")  # start callback(query.data)
-        start_shiping_callback(bot,update)
+        start_shipping_callback(bot,update)
 
 
 def start(bot, update):
+    typing(bot, update)
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
-    bot.send_message(chat_id=chat_id, text="HI!!!")
-    bot.send_message(chat_id=chat_id, text="Enter Your Full Name -- ")
+    bot.send_message(chat_id=chat_id, text="Hi And Welcome To Gift ME Bot!!!  😉😉 ")
+    bot.send_message(chat_id=chat_id, text="Enter Your Full Name  👉 ")
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
@@ -122,6 +143,7 @@ def get_elements(kind_present, text):
 
 
 def respond(bot, update):
+    typing(bot, update)
     global kind_present
     text = update.message.text
     chat_id = update.message.chat_id
@@ -152,6 +174,7 @@ def respond(bot, update):
 
 
 def send_gift(bot, update):
+    typing(bot, update)
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -160,9 +183,9 @@ def send_gift(bot, update):
 
 
 def choosing_gift(bot, update):
+    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
-    #[['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     keyboard = [[InlineKeyboardButton("Flowers", callback_data='Flowers'),
                  InlineKeyboardButton("Balloons", callback_data='Balloons'),
                  InlineKeyboardButton("Chocolates", callback_data='Chocolates'),
@@ -172,6 +195,7 @@ def choosing_gift(bot, update):
 
 
 def choosing_message(bot, update):
+    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='MESSAGE')],
@@ -179,13 +203,13 @@ def choosing_message(bot, update):
                  [InlineKeyboardButton("Happy Valentine's Day!!", callback_data='MESSAGE')],
                  [InlineKeyboardButton("Congratulations!!!", callback_data='MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    bot.send_message(chat_id=chat_id, text="choose your wish", reply_markup=reply_markup)
+    bot.send_message(chat_id=chat_id, text="choose your wish 😍", reply_markup=reply_markup)
 
 
 def price_range(bot, update):
+    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
-    # [[, '40$ - 60$', '60$ - 80$', '80$ - 100$']]
     keyboard = [[InlineKeyboardButton("20$ - 40$", callback_data='20 40'),
                  InlineKeyboardButton("40$ - 60$", callback_data='40 60'),
                  InlineKeyboardButton("60$ - 80$", callback_data='60 80'),
@@ -196,38 +220,58 @@ def price_range(bot, update):
 
 
 def help(bot, update):
+    typing(bot, update)
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-def send_notification(bot,update):
-    e = Event(settings.HOST, settings.DB)
-    events = e.get_all_events()
-    for event in events:
-        d0 = datetime.datetime.now()
-        d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
-        delta = d1 - d0
-        if str(delta.days) in "7321":
-            bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
-                f"days" if delta.days > 1 else "day")
+def send_notification(bot, update, current_event):
+    typing(bot, update)
+    event_date = current_event[3]
+    d0 = datetime.datetime.now()
+    d1 = datetime.datetime(d0.year, event_date.month, event_date.day)
+    delta = d1 - d0
+    if str(delta.days) in "7321":
+        bot_message = f" ⚠ Friendly Reminder its {current_event[1]} {current_event[2]} in {delta.days}" + (
+            f"days" if delta.days > 1 else "day")
 
-        elif delta.days == 0:
-            bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
-                " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
-        else:
-            continue
-        bot.send_message(chat_id=update.message.chat_id, text=bot_message)
-        bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
+    elif delta.days == 0:
+        bot_message = f" ⚠ Friendly Reminder its {current_event[1]} {current_event[2]}" + (
+            " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
+    else:
+        return
+
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+    bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
+    bot.send_message(chat_id=update.message.chat_id, text=bot_message)
+    # e = Event(settings.HOST, settings.DB)
+    # events = e.get_all_events()
+    # for event in events:
+    #     d0 = datetime.datetime.now()
+    #     d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
+    #     delta = d1 - d0
+    #     if str(delta.days) in "7321":
+    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
+    #             f"days" if delta.days > 1 else "day")
+    #
+    #     elif delta.days == 0:
+    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
+    #             " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
+    #     else:
+    #         continue
+    #     bot.send_message(chat_id=update.message.chat_id, text=bot_message)
+    #     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+    #     bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
 
 
 def add_event(bot, update):
+    typing(bot, update)
     global some_event
 
     if status["add_event"] == 0:
         status["add_event"] = 4
-        message = "adding event to a friend :)"
+        message = "adding event to a friend 😉"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Please enter your friend's name: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
@@ -249,7 +293,7 @@ def add_event(bot, update):
         else:
             status["add_event"] = 0
             some_event = []
-            message = "your friend doesn't exist in the list. add him by /add_friend"
+            message = " 🤔 your friend doesn't exist in the list. add him by /add_friend"
             bot.send_message(chat_id=update.message.chat_id, text=message)
 
     elif status["add_event"] == 2:
@@ -268,18 +312,19 @@ def add_event(bot, update):
         some_event.append(False)
         e = Event(settings.HOST, settings.DB)
         e.add_event(*some_event)
-        message = f"YAY you added an event to {some_event[1]}"
+        message = f"YAY you added an event to {some_event[1]} 😊"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+        send_notification(bot, update, some_event)
         some_event = []
-        bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_event"] -= 1
-        send_notification(bot,update)
 
-delete = []
+
 def delete_event(bot, update):
+    typing(bot, update)
     if status['delete_event'] == 0:
-        message = "OH NO you are deleting an event :("
+        message = "OH NO you are deleting an event 😧"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        message = "Enter friend Name ??"
+        message = "Enter your friend Name:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status['delete_event'] = 3
 
@@ -289,7 +334,7 @@ def delete_event(bot, update):
         ev = e.get_events_by_name(update.message.text)
         if len(ev) == 0:
             status['delete_event'] = 0
-            message = "you don't have such friend-event"
+            message = "🤔 you friend does not have this event"
             bot.send_message(chat_id=update.message.chat_id, text=message)
             return
         delete.append(update.message.text)
@@ -298,12 +343,14 @@ def delete_event(bot, update):
             message += "=> {} on {}\n".format(event["type"], event["date"])
         message += "enter type event:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
     elif status['delete_event'] == 2:
         status['delete_event'] -= 1
         type = update.message.text
         delete.append(type)
         message = "enter date of event:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
     elif status['delete_event'] == 1:
         status['delete_event'] -= 1
         date = update.message.text
@@ -318,7 +365,8 @@ def delete_event(bot, update):
 
 
 def show_upcoming_events(bot, update):
-    message = "Upcoming Events "
+    typing(bot, update)
+    message = "Upcoming Events ➙ \n"
     e = Event(settings.HOST, settings.DB)
     events = e.get_all_events()
     upcoming_events = []
@@ -327,14 +375,18 @@ def show_upcoming_events(bot, update):
         d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
         delta = d1 - d0
         if delta.days < 10:
-            upcoming_events.append(str(event))
-    message += "\n".join(upcoming_events)
+            upcoming_events.append(event)
+    for u_event in upcoming_events:
+        if delta.days == 0:
+            message += f"{u_event['name']} {u_event['type']}" + (" is TOMORROW\n" if delta.seconds / 3600 > 0 else "TODAY\n")
+        else:
+            message += f"{u_event['name']} {u_event['type']} in {delta.days}" + (f"days\n" if delta.days > 1 else "day\n")
+
     bot.send_message(chat_id=update.message.chat_id, text=message)
-    ###not completed
 
 
 def show_friends(bot, update):
-    message = "All of Your Friends\n"
+    message = "All of Your Friends ➙ \n"
     c_model = Client(settings.HOST, settings.DB)
     friends = c_model.get_all_friends(update.message.chat_id)
     for f in friends:
@@ -343,6 +395,7 @@ def show_friends(bot, update):
 
 
 def delete_friend(bot, update):
+    typing(bot, update)
     c_model = Client(settings.HOST, settings.DB)
     if status["delete_friend"] == 0:
         message = "Please enter the friend you wants to delete:"
@@ -355,6 +408,7 @@ def delete_friend(bot, update):
 
 
 def add_friend(bot, update):
+    typing(bot, update)
     global some_friend
     if status["add_friend"] == 0:
         status["add_friend"] = 3
@@ -374,7 +428,6 @@ def add_friend(bot, update):
     elif status["add_friend"] == 1:
         address = update.message.text
         some_friend.append(address)
-        # some_friend.append(False)
         c = Client(settings.HOST, settings.DB)
         friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
@@ -389,7 +442,8 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def start_shiping_callback(bot, update):
+def start_shipping_callback(bot, update):
+    typing(bot, update)
     if update.callback_query.message:
         mes = update.callback_query.message
     else:
@@ -402,6 +456,7 @@ def start_shiping_callback(bot, update):
 
 
 def start_with_shipping_callback(bot, update):
+    typing(bot, update)
     chat_id = update.message.chat_id
     title = "Payment Example"
     description = "Payment Example using python-telegram-bot"
@@ -447,9 +502,8 @@ def start_without_shipping_callback(bot, update):
 
 
 def shipping_callback(bot, update):
-    print("hhere")
+    typing(bot, update)
     query = update.shipping_query
-    print(query)
     # check the payload, is this from your bot?
     if query.invoice_payload != 'Custom-Payload':
         # answer False pre_checkout_query
