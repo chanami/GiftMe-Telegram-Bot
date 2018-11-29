@@ -431,7 +431,7 @@ def add_friend(bot, update):
         c = Client(settings.HOST, settings.DB)
         friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
-        message = f"YAY you added an friend"
+        message = f"YAY you added an friend 😉"
         some_friend = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_friend"] -= 1
