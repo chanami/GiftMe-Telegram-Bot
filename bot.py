@@ -274,31 +274,48 @@ def add_event(bot, update):
         status["add_event"] -= 1
         send_notification(bot,update)
 
-
+delete = []
 def delete_event(bot, update):
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Enter friend Name ??"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        status['delete_event'] = 2
+        status['delete_event'] = 3
 
-    elif status['delete_event'] == 2:
+    elif status['delete_event'] == 3:
         status['delete_event'] -= 1
         e = Event(settings.HOST, settings.DB)
         ev = e.get_events_by_name(update.message.text)
         if len(ev) == 0:
-            message = "you don't have such friend"
+            status['delete_event'] = 0
+            message = "you don't have such friend-event"
             bot.send_message(chat_id=update.message.chat_id, text=message)
             return
+        delete.append(update.message.text)
         message = ""
         for event in ev:
-            print(event["type"])
-            print(event["date"])
             message += "=> {} on {}\n".format(event["type"], event["date"])
         message += "enter type event:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        ########not complete
+    elif status['delete_event'] == 2:
+        status['delete_event'] -= 1
+        type = update.message.text
+        delete.append(type)
+        message = "enter date of event:"
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+    elif status['delete_event'] == 1:
+        status['delete_event'] -= 1
+        date = update.message.text
+        date = date.split('/')
+        date = [int(d) for d in date]
+        date = datetime.datetime(*date)
+        delete.append(date)
+        e = Event(settings.HOST, settings.DB)
+        e.delete_event(*delete)
+        message = "Deleted :("
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+
 
 
 def show_upcoming_events(bot, update):
