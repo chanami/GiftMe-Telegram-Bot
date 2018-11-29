@@ -245,25 +245,6 @@ def send_notification(bot, update, current_event):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
     bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
     bot.send_message(chat_id=update.message.chat_id, text=bot_message)
-    # e = Event(settings.HOST, settings.DB)
-    # events = e.get_all_events()
-    # for event in events:
-    #     d0 = datetime.datetime.now()
-    #     d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
-    #     delta = d1 - d0
-    #     if str(delta.days) in "7321":
-    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
-    #             f"days" if delta.days > 1 else "day")
-    #
-    #     elif delta.days == 0:
-    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
-    #             " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
-    #     else:
-    #         continue
-    #     bot.send_message(chat_id=update.message.chat_id, text=bot_message)
-    #     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-    #     bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
-
 
 def add_event(bot, update):
     typing(bot, update)
