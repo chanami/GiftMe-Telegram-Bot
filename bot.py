@@ -205,7 +205,7 @@ def send_notification(bot, update, current_event):
     d1 = datetime.datetime(d0.year, event_date.month, event_date.day)
     delta = d1 - d0
     if str(delta.days) in "7321":
-        bot_message = f"Friendly Reminder its {current_event[1]} {current_event[2]} in {delta.days}" + (
+        bot_message = f" ⚠ Friendly Reminder its {current_event[1]} {current_event[2]} in {delta.days}" + (
             f"days" if delta.days > 1 else "day")
 
     elif delta.days == 0:
