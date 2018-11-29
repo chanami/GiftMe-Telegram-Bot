@@ -1,5 +1,5 @@
 # Gift Me Telegram Bot
-{ONE LINE BOT DESCRIPTION HERE} <https://t.me/{BOT_ID}>
+http://t.me/giftMe_bot
 
 * Yael Yazdi
 * Chanami Tarshish (Ross)
