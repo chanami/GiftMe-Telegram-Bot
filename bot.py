@@ -42,7 +42,7 @@ def button(bot, update):
     elif query.data == 'SEND A MESSAGE':
         logger.info(f"= Got on chat #{chat_id}: pressed send a message button")
         choosing_message(bot, update)
-        pass
+        return
     elif query.data == 'Flowers':
         kind_present = 'Flowers'
         logger.info(f"= Got on chat #{chat_id}: pressed Flowers button")
@@ -98,6 +98,9 @@ def button(bot, update):
             keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+    elif query.data == 'MESSAGE':
+        logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
+        bot.send_message(chat_id=chat_id, text="sended the Wish Card to your friend!")
 
     else:
         print("start callback") #start callback(query.data)
@@ -166,12 +169,12 @@ def choosing_gift(bot, update):
 def choosing_message(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
-    keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='Flowers')],
-                 [InlineKeyboardButton("Happy anniversary!!", callback_data='Balloons')],
-                 [InlineKeyboardButton("Happy Valentine's Day!!", callback_data='Chocolates')],
-                 [InlineKeyboardButton("Congratulations!!!", callback_data='Chocolates')]]
+    keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='MESSAGE')],
+                 [InlineKeyboardButton("Happy anniversary!!", callback_data='MESSAGE')],
+                 [InlineKeyboardButton("Happy Valentine's Day!!", callback_data='MESSAGE')],
+                 [InlineKeyboardButton("Congratulations!!!", callback_data='MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
+    bot.send_message(chat_id=chat_id, text="choose your wish", reply_markup=reply_markup)
 
 def price_range(bot, update):
     query = update.callback_query
