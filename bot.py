@@ -31,8 +31,6 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
-# [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
-####
 def button(bot, update):
     global kind_present
     query = update.callback_query
@@ -65,31 +63,43 @@ def button(bot, update):
         gif = get_elements(kind_present, query.data)
         for g in gif:
             link = g["link"]
-            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            bot.sendDocument(chat_id=chat_id, document=link)
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
 
     elif query.data == '40 60':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
             link = g["link"]
-            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            bot.sendDocument(chat_id=chat_id, document=link)
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
     elif query.data == '60 80':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
             link = g["link"]
-            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            bot.sendDocument(chat_id=chat_id, document=link)
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
     elif query.data == '80 100':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
             link = g["link"]
-            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-            bot.sendDocument(chat_id=chat_id, document=link)
-####
+            bot.send_photo(chat_id=chat_id, photo=link)
+            keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+
+    else:
+        print("start callback") #start callback(query.data)
 
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
@@ -104,7 +114,6 @@ def start(bot, update):
 def get_elements(kind_present, text):
     g = giftList(settings.HOST, settings.DB)
     return g.get_gifts_by_cond(kind_present, text)
-
 
 def respond(bot, update):
     global kind_present
@@ -136,9 +145,6 @@ def respond(bot, update):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 def send_gift(bot, update):
-
-    # query = update.callback_query
-    # chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
