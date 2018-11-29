@@ -7,11 +7,14 @@ class giftList():
         self.gifts = self.db.get_collection("gifts")
 
     def add_gift(self, type, price, link):
-        self.gifts.replace_one({"link":link},{"type": type, "price":price, "link":link},upsert=True)
+        self.gifts.replace_one({"link": link}, {"type": type, "price":price, "link": link}, upsert=True)
 
-    def get_gifts_by_type(self, type):
-        myCursor = self.gifts.find({"type": type})
+    def get_gifts_by_cond(self, type, price):
+        p = price.split()
+        start = int(p[0])-1
+        end = int(p[1])+1
+        myRange = self.gifts.find({"type":type, "price": {"$gt": start, "$lt": end}})
         list = []
-        for x in myCursor:
+        for x in myRange:
             list.append(x)
         return list
