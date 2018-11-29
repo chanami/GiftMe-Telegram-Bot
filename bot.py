@@ -178,7 +178,7 @@ def choosing_message(bot, update):
                  [InlineKeyboardButton("Happy Valentine's Day!!", callback_data='MESSAGE')],
                  [InlineKeyboardButton("Congratulations!!!", callback_data='MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    bot.send_message(chat_id=chat_id, text="choose your wish", reply_markup=reply_markup)
+    bot.send_message(chat_id=chat_id, text="choose your wish 😍", reply_markup=reply_markup)
 
 
 def price_range(bot, update):
