@@ -312,7 +312,7 @@ def add_event(bot, update):
         some_event.append(False)
         e = Event(settings.HOST, settings.DB)
         e.add_event(*some_event)
-        message = f"YAY you added an event to {some_event[1]}"
+        message = f"YAY you added an event to {some_event[1]} 😊"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         send_notification(bot, update, some_event)
         some_event = []
