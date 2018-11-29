@@ -238,7 +238,7 @@ def add_event(bot, update):
         name = update.message.text
         c = Client(settings.HOST, settings.DB)
         flag = False
-        for friend in c.get_friends(update.message.chat_id):
+        for friend in c.get_all_friends(update.message.chat_id):
             if friend['full_name'] == name:
                 flag = True
         if flag:
