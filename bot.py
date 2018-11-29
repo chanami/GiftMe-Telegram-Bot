@@ -271,7 +271,7 @@ def add_event(bot, update):
 
     if status["add_event"] == 0:
         status["add_event"] = 4
-        message = "adding event to a friend :)"
+        message = "adding event to a friend 😉"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Please enter your friend's name: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
