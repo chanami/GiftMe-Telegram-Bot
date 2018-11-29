@@ -30,12 +30,13 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
+# [['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
 ####
 def button(bot, update):
+    global kind_present
     query = update.callback_query
     chat_id = query.message.chat_id
     if query.data == 'SEND A GIFT':
-        print("stam")
         logger.info(f"= Got on chat #{chat_id}: pressed send a gift button")
         choosing_gift(bot, update)
     elif query.data == 'SEND A MESSAGE':
@@ -43,8 +44,35 @@ def button(bot, update):
         choosing_message(bot, update)
         pass
     elif query.data == 'Flowers':
+        kind_present = 'Flowers'
         logger.info(f"= Got on chat #{chat_id}: pressed Flowers button")
         price_range(bot, update)
+    elif query.data == 'Balloons':
+        kind_present = 'Balloons'
+        logger.info(f"= Got on chat #{chat_id}: pressed Balloons button")
+        price_range(bot, update)
+    elif query.data == 'Chocolates':
+        kind_present = 'Chocolates'
+        logger.info(f"= Got on chat #{chat_id}: pressed Chocolates button")
+        price_range(bot, update)
+    elif query.data == 'Surprise_Gift':
+        kind_present = 'Surprise_Gift'
+        logger.info(f"= Got on chat #{chat_id}: pressed Surprise Gift button")
+        price_range(bot, update)
+    elif query.data == '20 40':
+        logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            bot.send_message(chat_id=chat_id, text=g["price"])
+    elif query.data == '40 60':
+        logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
+        get_elements(kind_present, query.data)
+    elif query.data == '60 80':
+        logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
+        get_elements(kind_present, query.data)
+    elif query.data == '80 100':
+        logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
+        get_elements(kind_present, query.data)
 
 ####
 
@@ -63,40 +91,16 @@ kind_present = ""
 
 
 def get_elements(kind_present, text):
-    gift = giftList.get_gifts_by_type(kind_present)
-    ran = giftList.get_gifts_by_price(text)
-    gift_in_range = []
-    for x, y in zip(gift, ran):
-        if x == y:
-            gift_in_range.append(x)
+    g = giftList(settings.HOST, settings.DB)
+    return g.get_gifts_by_cond(kind_present, text)
+
 
 def respond(bot, update):
     global kind_present
     text = update.message.text
     chat_id = update.message.chat_id
-    if text =='SEND A GIFT':
-        choosing_gift(bot, update)
-        return
 
-    elif text =='SEND A MESSAGE':
-        bot.send_message(chat_id=chat_id, text="Working In Progress")
-        choosing_message(bot, update)
-        return
-
-    elif text in ['Happy Birthday!!!', 'Happy anniversary!!', "Happy Valentine's Day!!", 'Congratulations!!!']:
-        bot.send_message(chat_id=chat_id, text="The Message Is Send!!!")
-        return
-
-    elif text in ['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']:
-        kind_present = text
-        price_range(bot, update)
-        return
-
-    elif text in ['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']:
-        get_elements(kind_present, text)
-
-
-    elif status["add_event"]:
+    if status["add_event"]:
         add_event(bot, update)
 
     elif status["delete_friend"]:
@@ -120,14 +124,14 @@ def respond(bot, update):
 
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
-
 def send_gift(bot, update):
+    # query = update.callback_query
+    # chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="what is your choice?",
                      reply_markup=reply_markup)
-
 
 def choosing_gift(bot, update):
     query = update.callback_query
@@ -151,16 +155,21 @@ def choosing_message(bot, update):
     bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
 def price_range(bot, update):
-    custom_keyboard = [['20 - 40$', '40$ - 60$', '60$ - 80$', '80$ - 100$']]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat_id, text="what range of price", reply_markup=reply_markup)
-
+    query = update.callback_query
+    chat_id = query.message.chat_id
+    # [[, '40$ - 60$', '60$ - 80$', '80$ - 100$']]
+    keyboard = [[InlineKeyboardButton("20$ - 40$", callback_data='20 40'),
+                 InlineKeyboardButton("40$ - 60$", callback_data='40 60'),
+                 InlineKeyboardButton("60$ - 80$", callback_data='60 80'),
+                 InlineKeyboardButton("80$ - 100$", callback_data='80 100'),]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    bot.send_message(chat_id=chat_id, text="what is your choice?",
+                     reply_markup=reply_markup)
 
 def help(bot, update):
     help_o = Help()
     message = help_o.get_explanation()
     bot.send_message(chat_id=update.message.chat_id, text=message)
-
 
 def send_notification(bot,update):
     e = Event(settings.HOST, settings.DB)
@@ -181,7 +190,6 @@ def send_notification(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text=bot_message)
         bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
         bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
-
 
 def add_event(bot, update):
     global some_event
@@ -262,7 +270,7 @@ def delete_event(bot, update):
 
 def show_upcoming_events(bot, update):
     message = "Upcoming Events "
-    e = Event(settings.HOST, settings.TEST_DB)
+    e = Event(settings.HOST, settings.DB)
     events = e.get_all_events()
     upcoming_events = []
     for event in events:

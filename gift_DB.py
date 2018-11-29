@@ -9,16 +9,10 @@ class giftList():
     def add_gift(self, type, price, link):
         self.gifts.replace_one({"link": link}, {"type": type, "price":price, "link": link}, upsert=True)
 
-    def get_gifts_by_type(self, type):
-        myCursor = self.gifts.find({"type": type})
-        list = []
-        for x in myCursor:
-            list.append(x)
-        return list
-
-    def get_gifts_by_price(self, price):
+    def get_gifts_by_cond(self, type, price):
         p = price.split()
-        myRange = self.gifts.find({"price": {"$gt": p[0], "$lt": p[1]}})
+        myRange = self.gifts.find({"type": type})
+        #{"price": {"$gt": int(p[0]), "$lt": int(p[1])}})
         list = []
         for x in myRange:
             list.append(x)
