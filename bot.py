@@ -1,4 +1,3 @@
-import emoji
 import datetime
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
@@ -293,9 +292,6 @@ def add_event(bot, update):
         status["add_event"] -= 1
 
 
-
-
-
 def delete_event(bot, update):
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
@@ -341,7 +337,7 @@ def delete_event(bot, update):
 
 
 def show_upcoming_events(bot, update):
-    message = "Upcoming Events "
+    message = "Upcoming Events \n"
     e = Event(settings.HOST, settings.DB)
     events = e.get_all_events()
     upcoming_events = []
@@ -350,8 +346,13 @@ def show_upcoming_events(bot, update):
         d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
         delta = d1 - d0
         if delta.days < 10:
-            upcoming_events.append(str(event))
-    message += "\n".join(upcoming_events)
+            upcoming_events.append(event)
+    for u_event in upcoming_events:
+        if delta.days == 0:
+            message += f"{u_event['name']} {u_event['type']}" + (" is TOMORROW\n" if delta.seconds / 3600 > 0 else "TODAY\n")
+        else:
+            message += f"{u_event['name']} {u_event['type']} in {delta.days}" + (f"days\n" if delta.days > 1 else "day\n")
+
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
