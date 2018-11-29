@@ -20,9 +20,9 @@ class Client:
     def get_doc(self, chat_id):
         return self.lists.find_one({"chat_id": chat_id})
 
-    def get_friends(self, chat_id):
-        doc = self.get_doc(chat_id)
-        return doc['friends']
+    def get_all_friends(self, chat_id):
+        client=self.lists.find_one({"chat_id": chat_id})
+        return client["friends"]
 
     def delete_friend(self, chat_id, friend):
         self.lists.delete_one({"chat_id": chat_id, 'friends'[0]: friend})

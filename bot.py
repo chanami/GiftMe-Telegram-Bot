@@ -320,9 +320,9 @@ def show_upcoming_events(bot, update):
 def show_friends(bot, update):
     message = "All of Your Friends\n"
     c_model = Client(settings.HOST, settings.DB)
-    friends = c_model.get_friends(update.message.chat_id)
+    friends = c_model.get_all_friends(update.message.chat_id)
     for f in friends:
-        message += f"Name: {f['full_name ']}, Address: {f['address']}\n"
+        message += f"Name: {f['full_name']}, Address: {f['address']}\n"
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
