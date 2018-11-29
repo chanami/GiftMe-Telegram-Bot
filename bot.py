@@ -21,6 +21,7 @@ status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "de
 some_event = []
 delete = []
 some_friend = []
+price_object = [0]
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
     level=logging.INFO)
@@ -30,6 +31,7 @@ updater = Updater(token=secret_settings.BOT_TOKEN)
 dispatcher = updater.dispatcher
 
 kind_present = ""
+
 
 def send_action(action):
     """Sends `action` while processing func command."""
@@ -43,6 +45,7 @@ def send_action(action):
         return command_func
 
     return decorator
+
 
 @send_action(ChatAction.TYPING)
 def typing(bot, update):
@@ -122,7 +125,8 @@ def button(bot, update):
 
     else:
         print("start callback")  # start callback(query.data)
-        start_shipping_callback(bot,update)
+        price_object[0]=int(query.data)
+        start_shipping_callback(bot,update,query.data)
 
 
 def start(bot, update):
@@ -183,7 +187,6 @@ def send_gift(bot, update):
 
 
 def choosing_gift(bot, update):
-    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Flowers", callback_data='Flowers'),
@@ -195,7 +198,6 @@ def choosing_gift(bot, update):
 
 
 def choosing_message(bot, update):
-    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("Happy Birthday!!!", callback_data='MESSAGE')],
@@ -207,7 +209,6 @@ def choosing_message(bot, update):
 
 
 def price_range(bot, update):
-    typing(bot, update)
     query = update.callback_query
     chat_id = query.message.chat_id
     keyboard = [[InlineKeyboardButton("20$ - 40$", callback_data='20 40'),
@@ -245,30 +246,10 @@ def send_notification(bot, update, current_event):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
     bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
     bot.send_message(chat_id=update.message.chat_id, text=bot_message)
-    # e = Event(settings.HOST, settings.DB)
-    # events = e.get_all_events()
-    # for event in events:
-    #     d0 = datetime.datetime.now()
-    #     d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
-    #     delta = d1 - d0
-    #     if str(delta.days) in "7321":
-    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
-    #             f"days" if delta.days > 1 else "day")
-    #
-    #     elif delta.days == 0:
-    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
-    #             " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
-    #     else:
-    #         continue
-    #     bot.send_message(chat_id=update.message.chat_id, text=bot_message)
-    #     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-    #     bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
-
 
 def add_event(bot, update):
     typing(bot, update)
     global some_event
-
     if status["add_event"] == 0:
         status["add_event"] = 4
         message = "adding event to a friend 😉"
@@ -412,7 +393,7 @@ def add_friend(bot, update):
     global some_friend
     if status["add_friend"] == 0:
         status["add_friend"] = 3
-        message = "adding friend :)"
+        message = "adding friend 🙂"
         bot.send_message(chat_id=update.message.chat_id, text=message)
         message = "Please enter your friend's name: "
         bot.send_message(chat_id=update.message.chat_id, text=message)
@@ -431,7 +412,7 @@ def add_friend(bot, update):
         c = Client(settings.HOST, settings.DB)
         friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
-        message = f"YAY you added an friend"
+        message = f"YAY you added an friend 😉"
         some_friend = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_friend"] -= 1
@@ -442,8 +423,8 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def start_shipping_callback(bot, update):
-    typing(bot, update)
+def start_shipping_callback(bot, update,tmp):
+    print(tmp)
     if update.callback_query.message:
         mes = update.callback_query.message
     else:
@@ -467,7 +448,7 @@ def start_with_shipping_callback(bot, update):
     start_parameter = "test-payment"
     currency = "USD"
     # price in dollars
-    price = 1
+    price = price_object[0] if price_object[0] else 1
     # price * 100 so as to include 2 d.p.
     # check https://core.telegram.org/bots/payments#supported-currencies for more details
     prices = [LabeledPrice("Test", price * 100)]
@@ -491,7 +472,7 @@ def start_without_shipping_callback(bot, update):
     start_parameter = "test-payment"
     currency = "USD"
     # price in dollars
-    price = 1
+    price = price_object[0] if price_object[0] else 1
     # price * 100 so as to include 2 d.p.
     prices = [LabeledPrice("Test", price * 100)]
 
