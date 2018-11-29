@@ -17,7 +17,7 @@ import logging
 status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0,"delete_friend":  0}
 
 some_event = []
-
+delete = []
 some_friend = []
 logging.basicConfig(
     format='[%(levelname)s %(asctime)s %(module)s:%(lineno)d] %(message)s',
@@ -202,25 +202,42 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-def send_notification(bot,update):
-    e = Event(settings.HOST, settings.DB)
-    events = e.get_all_events()
-    for event in events:
-        d0 = datetime.datetime.now()
-        d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
-        delta = d1 - d0
-        if str(delta.days) in "7321":
-            bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
-                f"days" if delta.days > 1 else "day")
+def send_notification(bot, update, current_event):
+    event_date = current_event[3]
+    d0 = datetime.datetime.now()
+    d1 = datetime.datetime(d0.year, event_date.month, event_date.day)
+    delta = d1 - d0
+    if str(delta.days) in "7321":
+        bot_message = f"Friendly Reminder its {current_event[1]} {current_event[2]} in {delta.days}" + (
+            f"days" if delta.days > 1 else "day")
 
-        elif delta.days == 0:
-            bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
-                " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
-        else:
-            continue
-        bot.send_message(chat_id=update.message.chat_id, text=bot_message)
-        bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
-        bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
+    elif delta.days == 0:
+        bot_message = f"Friendly Reminder its {current_event[1]} {current_event[2]}" + (
+            " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
+    else:
+        return
+
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+    bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
+    bot.send_message(chat_id=update.message.chat_id, text=bot_message)
+    # e = Event(settings.HOST, settings.DB)
+    # events = e.get_all_events()
+    # for event in events:
+    #     d0 = datetime.datetime.now()
+    #     d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
+    #     delta = d1 - d0
+    #     if str(delta.days) in "7321":
+    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']} in {delta.days}" + (
+    #             f"days" if delta.days > 1 else "day")
+    #
+    #     elif delta.days == 0:
+    #         bot_message = f"Friendly Reminder its {event['name']} {event['type']}" + (
+    #             " is TOMORROW" if delta.seconds / 3600 > 0 else "TODAY")
+    #     else:
+    #         continue
+    #     bot.send_message(chat_id=update.message.chat_id, text=bot_message)
+    #     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+    #     bot.sendDocument(chat_id=update.message.chat_id, document="https://media.giphy.com/media/6gT5hWNOZxkVq/giphy.gif")
 
 
 def add_event(bot, update):
@@ -270,12 +287,15 @@ def add_event(bot, update):
         e = Event(settings.HOST, settings.DB)
         e.add_event(*some_event)
         message = f"YAY you added an event to {some_event[1]}"
-        some_event = []
         bot.send_message(chat_id=update.message.chat_id, text=message)
+        send_notification(bot, update, some_event)
+        some_event = []
         status["add_event"] -= 1
-        send_notification(bot,update)
 
-delete = []
+
+
+
+
 def delete_event(bot, update):
     if status['delete_event'] == 0:
         message = "OH NO you are deleting an event :("
@@ -299,12 +319,14 @@ def delete_event(bot, update):
             message += "=> {} on {}\n".format(event["type"], event["date"])
         message += "enter type event:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
     elif status['delete_event'] == 2:
         status['delete_event'] -= 1
         type = update.message.text
         delete.append(type)
         message = "enter date of event:"
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
     elif status['delete_event'] == 1:
         status['delete_event'] -= 1
         date = update.message.text
@@ -331,7 +353,6 @@ def show_upcoming_events(bot, update):
             upcoming_events.append(str(event))
     message += "\n".join(upcoming_events)
     bot.send_message(chat_id=update.message.chat_id, text=message)
-    ###not completed
 
 
 def show_friends(bot, update):
