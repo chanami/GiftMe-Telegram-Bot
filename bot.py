@@ -1,4 +1,6 @@
 import datetime
+
+import requests
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -63,22 +65,31 @@ def button(bot, update):
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
-            bot.send_message(chat_id=chat_id, text=g["price"])
+            link = g["link"]
+            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+            bot.sendDocument(chat_id=chat_id, document=link)
+
     elif query.data == '40 60':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
-            bot.send_message(chat_id=chat_id, text=g["price"])
+            link = g["link"]
+            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+            bot.sendDocument(chat_id=chat_id, document=link)
     elif query.data == '60 80':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
-            bot.send_message(chat_id=chat_id, text=g["price"])
+            link = g["link"]
+            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+            bot.sendDocument(chat_id=chat_id, document=link)
     elif query.data == '80 100':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         gif = get_elements(kind_present, query.data)
         for g in gif:
-            bot.send_message(chat_id=chat_id, text=g["price"])
+            link = g["link"]
+            bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+            bot.sendDocument(chat_id=chat_id, document=link)
 ####
 
 def start(bot, update):
