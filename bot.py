@@ -1,3 +1,4 @@
+import emoji
 import datetime
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
@@ -109,8 +110,8 @@ def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
-    bot.send_message(chat_id=chat_id, text="HI!!!")
-    bot.send_message(chat_id=chat_id, text="Enter Your Full Name -- ")
+    bot.send_message(chat_id=chat_id, text="HI!!!  😉😉 ")
+    bot.send_message(chat_id=chat_id, text="Enter Your Full Name -- 👉 ")
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
