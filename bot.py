@@ -293,7 +293,7 @@ def add_event(bot, update):
         else:
             status["add_event"] = 0
             some_event = []
-            message = "your friend doesn't exist in the list. add him by /add_friend"
+            message = " 🤔 your friend doesn't exist in the list. add him by /add_friend"
             bot.send_message(chat_id=update.message.chat_id, text=message)
 
     elif status["add_event"] == 2:
