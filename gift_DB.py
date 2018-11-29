@@ -11,8 +11,9 @@ class giftList():
 
     def get_gifts_by_cond(self, type, price):
         p = price.split()
-        myRange = self.gifts.find({"type": type})
-        #{"price": {"$gt": int(p[0]), "$lt": int(p[1])}})
+        start = int(p[0])-1
+        end = int(p[1])+1
+        myRange = self.gifts.find({"type":type, "price": {"$gt": start, "$lt": end}})
         list = []
         for x in myRange:
             list.append(x)

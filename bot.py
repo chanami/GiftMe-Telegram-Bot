@@ -56,7 +56,7 @@ def button(bot, update):
         logger.info(f"= Got on chat #{chat_id}: pressed Chocolates button")
         price_range(bot, update)
     elif query.data == 'Surprise_Gift':
-        kind_present = 'Surprise_Gift'
+        kind_present = 'Surprise Gift'
         logger.info(f"= Got on chat #{chat_id}: pressed Surprise Gift button")
         price_range(bot, update)
     elif query.data == '20 40':
@@ -66,13 +66,19 @@ def button(bot, update):
             bot.send_message(chat_id=chat_id, text=g["price"])
     elif query.data == '40 60':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        get_elements(kind_present, query.data)
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            bot.send_message(chat_id=chat_id, text=g["price"])
     elif query.data == '60 80':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        get_elements(kind_present, query.data)
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            bot.send_message(chat_id=chat_id, text=g["price"])
     elif query.data == '80 100':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        get_elements(kind_present, query.data)
+        gif = get_elements(kind_present, query.data)
+        for g in gif:
+            bot.send_message(chat_id=chat_id, text=g["price"])
 ####
 
 def start(bot, update):
@@ -84,10 +90,6 @@ def start(bot, update):
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
-
-
-kind_present = ""
-
 
 def get_elements(kind_present, text):
     g = giftList(settings.HOST, settings.DB)
