@@ -146,12 +146,6 @@ def respond(bot, update):
     logger.info(f"= Got on chat #{chat_id}: {text!r}")
 
 def send_gift(bot, update):
-<<<<<<< HEAD
-=======
-
-    # query = update.callback_query
-    # chat_id = query.message.chat_id
->>>>>>> b2f761c526939708fd0fa14446490b4eed2b8bde
     keyboard = [[InlineKeyboardButton("Send a Gift", callback_data='SEND A GIFT'),
                  InlineKeyboardButton("Send a Message", callback_data='SEND A MESSAGE')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
