@@ -383,6 +383,7 @@ def add_friend(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
         status["add_friend"] -= 1
 
+
 def error(bot, update, error):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
