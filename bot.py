@@ -317,7 +317,6 @@ def delete_event(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-
 def show_upcoming_events(bot, update):
     message = "Upcoming Events "
     e = Event(settings.HOST, settings.DB)
@@ -328,7 +327,7 @@ def show_upcoming_events(bot, update):
         d1 = datetime.datetime(d0.year, event['date'].month, event['date'].day)
         delta = d1 - d0
         if delta.days < 10:
-            upcoming_events.append(event)
+            upcoming_events.append(str(event))
     message += "\n".join(upcoming_events)
     bot.send_message(chat_id=update.message.chat_id, text=message)
     ###not completed
