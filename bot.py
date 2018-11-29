@@ -102,15 +102,15 @@ def button(bot, update):
 
     else:
         print("start callback")  # start callback(query.data)
-        start_shiping_callback(bot,update)
+        start_shipping_callback(bot,update)
 
 
 def start(bot, update):
     client_t = Client(settings.HOST, settings.DB)
     chat_id = update.message.chat_id
     logger.info(f"> Start chat #{chat_id}")
-    bot.send_message(chat_id=chat_id, text="HI!!!  😉😉 ")
-    bot.send_message(chat_id=chat_id, text="Enter Your Full Name -- 👉 ")
+    bot.send_message(chat_id=chat_id, text="Hi And Welcome To Gift ME Bot!!!  😉😉 ")
+    bot.send_message(chat_id=chat_id, text="Enter Your Full Name  👉 ")
     full_name = update.message.text
     status["add_member"] = 1
     client_t.create_new_member(chat_id, full_name)
@@ -162,7 +162,6 @@ def send_gift(bot, update):
 def choosing_gift(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
-    #[['Flowers', 'Balloons', 'Chocolates', 'Surprise Gift']]
     keyboard = [[InlineKeyboardButton("Flowers", callback_data='Flowers'),
                  InlineKeyboardButton("Balloons", callback_data='Balloons'),
                  InlineKeyboardButton("Chocolates", callback_data='Chocolates'),
@@ -185,7 +184,6 @@ def choosing_message(bot, update):
 def price_range(bot, update):
     query = update.callback_query
     chat_id = query.message.chat_id
-    # [[, '40$ - 60$', '60$ - 80$', '80$ - 100$']]
     keyboard = [[InlineKeyboardButton("20$ - 40$", callback_data='20 40'),
                  InlineKeyboardButton("40$ - 60$", callback_data='40 60'),
                  InlineKeyboardButton("60$ - 80$", callback_data='60 80'),
@@ -397,7 +395,6 @@ def add_friend(bot, update):
     elif status["add_friend"] == 1:
         address = update.message.text
         some_friend.append(address)
-        # some_friend.append(False)
         c = Client(settings.HOST, settings.DB)
         friend = {"full_name": some_friend[0], "address": some_friend[1]}
         c.add_friend_to_list(update.message.chat_id, friend)
@@ -411,7 +408,7 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def start_shiping_callback(bot, update):
+def start_shipping_callback(bot, update):
     if update.callback_query.message:
         mes = update.callback_query.message
     else:
