@@ -373,9 +373,15 @@ def error(bot, update, error):
 
 
 def start_shiping_callback(bot, update):
+    if update.callback_query.message:
+        mes = update.callback_query.message
+    else:
+        mes = update.callback_query.edited_message
+
     msg = "Use /shipping to get an invoice for shipping-payment, "
     msg += "or /noshipping for an invoice without shipping."
-    update.message.reply_text(msg)
+    # update.message.reply_text(msg)
+    bot.send_message(chat_id=mes.chat.id, text=msg)
 
 
 def start_with_shipping_callback(bot, update):
