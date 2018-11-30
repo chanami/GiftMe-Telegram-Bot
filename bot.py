@@ -120,7 +120,7 @@ def button(bot, update):
             bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
     elif query.data == 'MESSAGE':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
-        bot.send_message(chat_id=chat_id, text="Wish Card was sent to your friend!")
+        bot.send_message(chat_id=chat_id, text="Wish Card was sent to your friend 😉😉")
 
     else:
         print("start callback")  # start callback(query.data)
@@ -488,7 +488,7 @@ def shipping_callback(bot, update):
     if query.invoice_payload != 'Custom-Payload':
         # answer False pre_checkout_query
         bot.answer_shipping_query(shipping_query_id=query.id, ok=False,
-                                  error_message="Something went wrong...")
+                                  error_message="😮 Something went wrong...")
         return
     else:
         options = list()
@@ -508,7 +508,7 @@ def precheckout_callback(bot, update):
     if query.invoice_payload != 'Custom-Payload':
         # answer False pre_checkout_query
         bot.answer_pre_checkout_query(pre_checkout_query_id=query.id, ok=False,
-                                      error_message="Something went wrong...")
+                                      error_message="😮 Something went wrong...")
     else:
         bot.answer_pre_checkout_query(pre_checkout_query_id=query.id, ok=True)
 
