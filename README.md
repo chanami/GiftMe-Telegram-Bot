@@ -25,7 +25,7 @@ https://gift-me.monday.com/boards/153303190/
 * Python 3.7
 * pipenv
 * MongoDB
-* {ADD MORE DEPENDENCIES HERE}
+* Shipping
 
 ### Setup
 * Clone this repo from github
@@ -45,5 +45,5 @@ To run the bot use:
 ## Credits and References
 * [Telegram Docs](https://core.telegram.org/bots)
 * [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-* {ADD MORE REFERENCES HERE}
+
 
