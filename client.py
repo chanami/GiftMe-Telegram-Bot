@@ -21,7 +21,7 @@ class Client:
         return self.lists.find_one({"chat_id": chat_id})
 
     def get_all_friends(self, chat_id):
-        client=self.lists.find_one({"chat_id": chat_id})
+        client = self.lists.find_one({"chat_id": chat_id})
         return client["friends"]
 
     def delete_friend(self, chat_id, friend):

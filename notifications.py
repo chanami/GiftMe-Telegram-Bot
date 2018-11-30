@@ -22,20 +22,6 @@ def check_event_dates():
     #     else:
     #         continue
     #     bot_send_notifications(bot_message,str(event['client_id']))
-
-
-# def bot_send_notifications(bot_message,chat_id):
-#
-#     bot_token = secret_settings.BOT_TOKEN
-#
-#     bot_chatID = chat_id
-#     # bot_chatID = '757815786'
-#     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
-#     requests.get(send_text)
-
 def send_notifications():
     pass
 
-
-# bot_send_notifications("hello my friend")
-# check_event_dates()

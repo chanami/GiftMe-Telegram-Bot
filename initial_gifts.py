@@ -19,9 +19,8 @@ def initial():
     g.add_gift('Balloons', 90, "https://www.balloonplanet.com/shop/images/products/product_9316_medium.jpg")
     g.add_gift('Balloons', 28, "https://bridgewaterfloristma.net/wp-content/uploads/2018/08/IDS-B19.jpg")
     g.add_gift('Balloons', 35, "https://www.bigw.com.au/medias/sys_master/images/images/h2c/h76/12154851491870.jpg")
-    g.add_gift('Balloons', 62 ,"https://www.b-loony.co.uk/media/catalog/product/cache/1/image/650x/2d2af058176195dd86a5ae630658753a/i/m/image_265.jpg")
-    g.add_gift('Balloons', 75 ,"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPisSI1jHgkbloQg2zZtQ0uJzhCRi0exfjQTsS8lprMbZxvNOQKw")
-
+    g.add_gift('Balloons', 62, "https://www.b-loony.co.uk/media/catalog/product/cache/1/image/650x/2d2af058176195dd86a5ae630658753a/i/m/image_265.jpg")
+    g.add_gift('Balloons', 75, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPisSI1jHgkbloQg2zZtQ0uJzhCRi0exfjQTsS8lprMbZxvNOQKw")
 
     g.add_gift('Chocolates', 26, "https://pieceloveandchocolate.com/wp-content/uploads/2014/08/Gift-Baskets-Sm-Files-14.jpg")
     g.add_gift('Chocolates', 81, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBXLgAMpwVFaqFTtM2_uBCds3H0Jl7--EnQ1YIdAhMXhenO5lZCw")

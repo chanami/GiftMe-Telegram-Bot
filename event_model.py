@@ -14,7 +14,7 @@ class Event:
         self.events.delete_one({"name": name, "type": type, "date": date})
 
     def get_events_by_date(self, date):
-        myCursor =  self.events.find({"date": date})
+        myCursor = self.events.find({"date": date})
         list = []
         for x in myCursor:
             list.append(x)
@@ -38,7 +38,7 @@ class Event:
         return list
 
     def get_upcoming_events(self, start, end):
-        myCursor = self.events.find({"date": {"$gt": start, "$lt": end } })
+        myCursor = self.events.find({"date": {"$gt": start, "$lt": end}})
         list = []
         for x in myCursor:
             list.append(x)

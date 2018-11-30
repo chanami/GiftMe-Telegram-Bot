@@ -9,14 +9,14 @@ import settings
 from event_model import Event
 from help import Help
 from client import Client
-from telegram.ext import CommandHandler, CallbackQueryHandler
+from telegram.ext import CallbackQueryHandler
 from gift_DB import giftList
 from telegram import (LabeledPrice, ShippingOption)
 from telegram.ext import (Updater, CommandHandler, MessageHandler,
                           Filters, PreCheckoutQueryHandler, ShippingQueryHandler)
 import logging
 
-status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0,"delete_friend":  0}
+status = {"add_member": 0, "add_friend":  0, "add_event": 0, "send_gift": 0, "delete_event": 0, "delete_friend":  0}
 
 some_event = []
 delete = []
@@ -84,7 +84,7 @@ def button(bot, update):
             bot.send_photo(chat_id=chat_id, photo=link)
             keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+            bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
     elif query.data == '40 60':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
@@ -94,7 +94,7 @@ def button(bot, update):
             bot.send_photo(chat_id=chat_id, photo=link)
             keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+            bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
     elif query.data == '60 80':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
@@ -104,7 +104,7 @@ def button(bot, update):
             bot.send_photo(chat_id=chat_id, photo=link)
             keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+            bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
 
     elif query.data == '80 100':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
@@ -115,7 +115,7 @@ def button(bot, update):
             bot.send_photo(chat_id=chat_id, photo=link)
             keyboard = [[InlineKeyboardButton("Buy it now", callback_data=g["price"])]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            bot.send_message(chat_id=chat_id, text="what is your choice?",reply_markup=reply_markup)
+            bot.send_message(chat_id=chat_id, text="what is your choice?", reply_markup=reply_markup)
     elif query.data == 'MESSAGE':
         logger.info(f"= Got on chat #{chat_id}: pressed {query.data} button")
         bot.send_message(chat_id=chat_id, text="Wish Card was sent to your friend!")
