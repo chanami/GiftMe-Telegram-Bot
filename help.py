@@ -8,7 +8,7 @@ class Help():
 /delete_event:  delete an event\n
 /show_upcoming_events:  show upcoming events of this week\n
 /send_gift: Opening a gift selection\n
-/shipping: start payment with shipping callback/n
+/shipping: start payment with shipping callback\n
 /noshipping: start payment without shipping callback '''
     def get_explanation(self):
         return self.com
