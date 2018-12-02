@@ -25,7 +25,6 @@ https://gift-me.monday.com/boards/153303190/
 * Python 3.7
 * pipenv
 * MongoDB
-* Shipping
 
 ### Setup
 * Clone this repo from github
