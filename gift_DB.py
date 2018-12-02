@@ -1,4 +1,5 @@
 from pymongo.mongo_client import MongoClient
+from initial_gifts import initial
 
 
 class giftList():
@@ -6,6 +7,7 @@ class giftList():
         self.client = MongoClient(host)
         self.db = self.client.get_database(db)
         self.gifts = self.db.get_collection("gifts")
+        initial()
 
     def add_gift(self, type, price, link):
         self.gifts.replace_one({"link": link}, {"type": type, "price": price, "link": link}, upsert=True)
